@@ -1,0 +1,50 @@
+/* FinPilot AI - Sleek Dark Black Fintech Theme */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap');
+
+:root {
+  --bg-body: #05070B;
+  --bg-surface: #101520;
+  --bg-secondary: #182030;
+  --bg-navy: #0A0E17;
+  --bg-navy-light: #161F33;
+  --text-main: #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
+  --text-subtle: #64748B;
+  --text-inverse: #FFFFFF;
+  --border-color: #242F47;
+  --border-strong: #334155;
+  --brand-gold: #F59E0B;
+  --brand-gold-hover: #D97706;
+  --brand-gold-light: rgba(245, 158, 11, 0.15);
+  --brand-gold-border: rgba(245, 158, 11, 0.3);
+  --status-green: #10B981;
+  --status-green-bg: rgba(16, 185, 129, 0.15);
+  --status-green-border: rgba(16, 185, 129, 0.3);
+  --status-orange: #F97316;
+  --status-orange-bg: rgba(249, 115, 22, 0.15);
+  --status-orange-border: rgba(249, 115, 22, 0.3);
+  --status-red: #EF4444;
+  --status-red-bg: rgba(239, 68, 68, 0.15);
+  --status-blue: #3B82F6;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading: 'Outfit', 'Inter', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
