@@ -2,6 +2,7 @@ import datetime
 import os
 import math
 import random
+import json
 from typing import List, Dict, Optional
 from fastapi import FastAPI, Depends, HTTPException, status, Query
 from fastapi.responses import FileResponse
@@ -9,13 +10,22 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from backend.database import engine, get_db
-from backend.models import Base, User, LessonCompletion, UserGoal, AssetHolding, PaperHolding
+from backend.models import Base, User, LessonCompletion, UserGoal, AssetHolding, PaperHolding, FinancialFreedomPlan
 from backend.auth import get_password_hash, verify_password, create_access_token, get_current_user
 from backend.schemas import (
     UserRegister, UserLogin, Token, UserResponse,
     LessonCompletionRequest, LessonCompletionResponse,
     GoalSaveRequest, GoalResponse, RebalanceRequest, RebalanceResponse, AssetHoldingResponse,
-    HealthCheckRequest, PaperTradeRequest, PaperHoldingResponse, CopilotQueryRequest
+    HealthCheckRequest, PaperTradeRequest, PaperHoldingResponse, CopilotQueryRequest,
+    FinancialFreedomCalculateRequest, FinancialFreedomPlanSaveRequest
+)
+from backend.services.financial_freedom_service import (
+    calculate_cashflow,
+    calculate_emergency_fund,
+    calculate_financial_freedom,
+    calculate_years_to_freedom,
+    calculate_scenarios,
+    calculate_readiness_score
 )
 
 # Root directory for serving static frontend files
@@ -1194,6 +1204,129 @@ def get_mutual_funds(category: Optional[str] = None, search: Optional[str] = Non
         s = search.lower()
         funds = [f for f in funds if s in f["name"].lower() or s in f["category"].lower() or s in f["obj"].lower()]
     return {"status": "ok", "total": len(funds), "funds": funds}
+
+
+# --- FINANCIAL FREEDOM PLANNER ENDPOINTS ---
+
+@app.post("/api/freedom/calculate")
+def calculate_freedom_plan(req: FinancialFreedomCalculateRequest):
+    """
+    Computes end-to-end Financial Freedom planning numbers:
+    Cashflow, Emergency Fund, Freedom Corpus, Reverse SIP, Timeline, Scenarios, Readiness Score.
+    """
+    cf = calculate_cashflow(
+        income_dict=req.income,
+        essential_dict=req.essential_expenses,
+        lifestyle_dict=req.lifestyle_expenses,
+        emi_dict=req.emis,
+        custom_expenses=req.custom_expenses,
+        current_investments_dict=req.current_investments,
+        current_savings=req.current_savings,
+        emergency_target_months=req.emergency_target_months,
+        risk_level=req.risk_level
+    )
+
+    ef = calculate_emergency_fund(
+        essential_monthly=cf["total_essential_expenses"],
+        emi_monthly=cf["total_emis"],
+        current_savings=req.current_savings,
+        multiplier_months=req.emergency_target_months,
+        monthly_capacity=cf["safe_investment_capacity"]
+    )
+
+    existing_investments_total = cf["total_current_investments"]
+
+    ff = calculate_financial_freedom(
+        monthly_expense_today=req.desired_monthly_expense_today,
+        inflation_rate=req.inflation_rate,
+        horizon_years=req.horizon_years,
+        withdrawal_rate=req.withdrawal_rate,
+        existing_investments=existing_investments_total,
+        return_assumption=req.return_assumption,
+        monthly_investment_capacity=cf["safe_investment_capacity"]
+    )
+
+    y2f = calculate_years_to_freedom(
+        current_corpus=existing_investments_total,
+        monthly_sip=cf["safe_investment_capacity"],
+        return_rate=req.return_assumption,
+        monthly_expense_today=req.desired_monthly_expense_today,
+        inflation_rate=req.inflation_rate,
+        withdrawal_rate=req.withdrawal_rate
+    )
+
+    scenarios = calculate_scenarios(
+        monthly_expense_today=req.desired_monthly_expense_today,
+        inflation_rate=req.inflation_rate,
+        horizon_years=req.horizon_years,
+        withdrawal_rate=req.withdrawal_rate,
+        existing_investments=existing_investments_total,
+        monthly_sip=cf["safe_investment_capacity"]
+    )
+
+    monthly_obligation = cf["total_essential_expenses"] + cf["total_emis"]
+    current_ef_months = (req.current_savings / monthly_obligation) if monthly_obligation > 0 else 12.0
+    cap_to_sip_ratio = (cf["safe_investment_capacity"] / ff["required_sip"]) if ff["required_sip"] > 0 else 1.0
+
+    readiness = calculate_readiness_score(
+        emergency_fund_months=current_ef_months,
+        emi_burden_pct=cf["emi_burden_pct"],
+        savings_rate_pct=cf["savings_rate_pct"],
+        capacity_to_sip_ratio=cap_to_sip_ratio,
+        horizon_years=req.horizon_years
+    )
+
+    return {
+        "status": "ok",
+        "cashflow": cf,
+        "emergency_fund": ef,
+        "financial_freedom": ff,
+        "years_to_freedom": y2f,
+        "scenarios": scenarios,
+        "readiness_score": readiness,
+        "disclaimer": "All calculations, projections, and scenarios are illustrative planning assumptions and do not constitute a guarantee of future investment returns or financial freedom."
+    }
+
+
+@app.get("/api/freedom/profile")
+def get_freedom_profile(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """Retrieves user's persisted Financial Freedom plan."""
+    plan = db.query(FinancialFreedomPlan).filter(FinancialFreedomPlan.user_id == current_user.id).first()
+    if not plan:
+        return {"saved": False, "profile_data": None, "results_data": None}
+    return {
+        "saved": True,
+        "user_id": plan.user_id,
+        "profile_data": json.loads(plan.profile_data),
+        "results_data": json.loads(plan.results_data) if plan.results_data else None,
+        "updated_at": plan.updated_at.isoformat() if plan.updated_at else None
+    }
+
+
+@app.post("/api/freedom/profile")
+def save_freedom_profile(
+    plan_data: FinancialFreedomPlanSaveRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Saves or updates user's Financial Freedom plan."""
+    plan = db.query(FinancialFreedomPlan).filter(FinancialFreedomPlan.user_id == current_user.id).first()
+    if not plan:
+        plan = FinancialFreedomPlan(
+            user_id=current_user.id,
+            profile_data=json.dumps(plan_data.profile_data),
+            results_data=json.dumps(plan_data.results_data) if plan_data.results_data else None
+        )
+        db.add(plan)
+    else:
+        plan.profile_data = json.dumps(plan_data.profile_data)
+        if plan_data.results_data:
+            plan.results_data = json.dumps(plan_data.results_data)
+        plan.updated_at = datetime.datetime.utcnow()
+
+    db.commit()
+    db.refresh(plan)
+    return {"status": "success", "message": "Financial Freedom plan saved successfully"}
 
 
 # --- HEALTH CHECK & STATIC FRONTEND SERVING ---

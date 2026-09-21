@@ -20,6 +20,7 @@ class User(Base):
     goals = relationship("UserGoal", back_populates="user", uselist=False, cascade="all, delete-orphan")
     holdings = relationship("AssetHolding", back_populates="user", cascade="all, delete-orphan")
     paper_holdings = relationship("PaperHolding", back_populates="user", cascade="all, delete-orphan")
+    freedom_plan = relationship("FinancialFreedomPlan", back_populates="user", uselist=False, cascade="all, delete-orphan")
 
 
 class LessonCompletion(Base):
@@ -72,4 +73,16 @@ class PaperHolding(Base):
     current_price = Column(Float, nullable=False)
 
     user = relationship("User", back_populates="paper_holdings")
+
+
+class FinancialFreedomPlan(Base):
+    __tablename__ = "financial_freedom_plans"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
+    profile_data = Column(String, nullable=False)  # JSON encoded input profile & expenses
+    results_data = Column(String, nullable=True)   # JSON encoded calculations & scenarios
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
+    user = relationship("User", back_populates="freedom_plan")
 

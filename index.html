@@ -1036,6 +1036,7 @@
     // SVG Icons
     const Icons = {
       Overview: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>,
+      Freedom: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/></svg>,
       Learn: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>,
       Tutor: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/></svg>,
       IQ: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>,
@@ -1451,6 +1452,291 @@
 
       // Portfolio Guardian State
       const [guardianRebalanced, setGuardianRebalanced] = useState(false);
+
+      // ----------------------------------------------------------------------
+      // FINANCIAL FREEDOM PLANNER STATE (Flagship Feature)
+      // ----------------------------------------------------------------------
+      const [freedomStep, setFreedomStep] = useState(1); // 1 to 10
+      const [ffName, setFfName] = useState('Investor');
+      const [ffAge, setFfAge] = useState(28);
+      const [ffRetireAge, setFfRetireAge] = useState(55);
+      const [ffLifeExpectancy, setFfLifeExpectancy] = useState(85);
+
+      // Incomes
+      const [ffIncome, setFfIncome] = useState({
+        monthly_income: 75000,
+        additional_income: 0,
+        rental_income: 0,
+        spouse_income: 0
+      });
+
+      // Essential Expenses
+      const [ffEssential, setFfEssential] = useState({
+        rent_maintenance: 15000,
+        property_tax: 1000,
+        utilities: 2500,
+        groceries: 6500,
+        transportation: 3500,
+        medical_expenses: 1500,
+        school_fees: 0,
+        insurance_premiums: 2000
+      });
+
+      // Lifestyle Expenses
+      const [ffLifestyle, setFfLifestyle] = useState({
+        maid: 2000,
+        shopping: 2500,
+        travel: 1500,
+        dining_entertainment: 2000,
+        other_lifestyle: 0
+      });
+
+      // EMIs
+      const [ffEmis, setFfEmis] = useState({
+        home_loan_emi: 0,
+        car_loan_emi: 7000,
+        personal_loan_emi: 0,
+        other_emi: 0
+      });
+
+      // Current Investments
+      const [ffInvestments, setFfInvestments] = useState({
+        mutual_funds: 60000,
+        stocks: 25000,
+        fixed_deposits: 10000,
+        other_investments: 0
+      });
+
+      // Custom Expenses List
+      const [ffCustomExpenses, setFfCustomExpenses] = useState([
+        { id: 1, name: 'Cloud & Streaming Subscriptions', amount: 999, note: 'OTT & Cloud' }
+      ]);
+      const [newCustomName, setNewCustomName] = useState('');
+      const [newCustomAmount, setNewCustomAmount] = useState('');
+      const [newCustomNote, setNewCustomNote] = useState('');
+
+      // Savings & Emergency Fund
+      const [ffCurrentSavings, setFfCurrentSavings] = useState(180000);
+      const [ffEmergencyMonths, setFfEmergencyMonths] = useState(6);
+
+      // Financial Freedom Goal & Parameters
+      const [ffGoalType, setFfGoalType] = useState('financial_freedom');
+      const [ffTargetMonthlyExpense, setFfTargetMonthlyExpense] = useState(40000);
+      const [ffInflationRate, setFfInflationRate] = useState(6);
+      const [ffWithdrawalRate, setFfWithdrawalRate] = useState(4);
+      const [ffHorizonYears, setFfHorizonYears] = useState(10);
+      const [ffReturnAssumption, setFfReturnAssumption] = useState(10);
+      const [ffRisk, setFfRisk] = useState('moderate');
+
+      // Solo Mode Diff Tracker & Explanation Modal
+      const [soloBaselineSip, setSoloBaselineSip] = useState(null);
+      const [activeExplainerModal, setActiveExplainerModal] = useState(null);
+      const [planSaveStatus, setPlanSaveStatus] = useState('');
+
+      // Authoritative Financial Freedom Calculation Engine
+      const freedomCalculations = useMemo(() => {
+        const totalIncome = Math.max(0, Number(ffIncome.monthly_income) || 0)
+          + Math.max(0, Number(ffIncome.additional_income) || 0)
+          + Math.max(0, Number(ffIncome.rental_income) || 0)
+          + Math.max(0, Number(ffIncome.spouse_income) || 0);
+
+        const totalEssential = Object.values(ffEssential).reduce((a, b) => a + Math.max(0, Number(b) || 0), 0);
+        const totalLifestyle = Object.values(ffLifestyle).reduce((a, b) => a + Math.max(0, Number(b) || 0), 0);
+        const totalEmis = Object.values(ffEmis).reduce((a, b) => a + Math.max(0, Number(b) || 0), 0);
+        const totalCustom = ffCustomExpenses.reduce((a, b) => a + Math.max(0, Number(b.amount) || 0), 0);
+        const totalExpenses = totalEssential + totalLifestyle + totalEmis + totalCustom;
+        const totalInvestedExisting = Object.values(ffInvestments).reduce((a, b) => a + Math.max(0, Number(b) || 0), 0);
+
+        const monthlySurplus = totalIncome - totalExpenses;
+        const monthlyObligations = totalEssential + totalEmis;
+        const emergencyTarget = monthlyObligations * ffEmergencyMonths;
+        const emergencyGap = Math.max(0, emergencyTarget - ffCurrentSavings);
+        const emergencyReady = ffCurrentSavings >= emergencyTarget;
+
+        let suggestedBuffer = 0;
+        let safeCapacity = 0;
+        if (monthlySurplus > 0) {
+          let bufferPct = emergencyGap > 0 ? 0.30 : 0.20;
+          if (ffRisk === 'conservative') bufferPct += 0.05;
+          if (ffRisk === 'aggressive') bufferPct = Math.max(0.15, bufferPct - 0.05);
+
+          const rawBuffer = monthlySurplus * bufferPct;
+          const minBuffer = Math.min(monthlySurplus, Math.max(3000, totalIncome * 0.05));
+          suggestedBuffer = Math.round(Math.max(rawBuffer, minBuffer));
+          safeCapacity = Math.max(0, Math.round(monthlySurplus - suggestedBuffer));
+        }
+
+        const savingsRatePct = totalIncome > 0 ? ((monthlySurplus / totalIncome) * 100).toFixed(1) : '0.0';
+        const emiBurdenPct = totalIncome > 0 ? ((totalEmis / totalIncome) * 100).toFixed(1) : '0.0';
+        const emergencyMonthsToFund = emergencyReady ? 0 : (safeCapacity > 0 ? Math.ceil(emergencyGap / safeCapacity) : 999);
+
+        // Inflation & Future Living Expense
+        const inflationRateDec = Math.max(0, ffInflationRate) / 100;
+        const horizon = Math.max(1, ffHorizonYears);
+        const inflationFactor = Math.pow(1 + inflationRateDec, horizon);
+        const futureMonthlyExpense = Math.round(ffTargetMonthlyExpense * inflationFactor);
+        const futureAnnualExpense = futureMonthlyExpense * 12;
+
+        // Freedom Corpus (Annual / Withdrawal Rate)
+        const withdrawalRateDec = Math.max(0.01, ffWithdrawalRate) / 100;
+        const freedomCorpus = Math.round(futureAnnualExpense / withdrawalRateDec);
+
+        // Existing Investments Future Value (PV * (1+r)^n)
+        const returnDec = Math.max(0, ffReturnAssumption) / 100;
+        const growthFactor = Math.pow(1 + returnDec, horizon);
+        const existingInvestmentsFv = Math.round(totalInvestedExisting * growthFactor);
+        const netCorpusNeeded = Math.max(0, freedomCorpus - existingInvestmentsFv);
+
+        // Reverse SIP Annuity Solver
+        const rMonth = returnDec / 12;
+        const nMonths = horizon * 12;
+        let requiredSip = 0;
+        let denom = 0;
+
+        if (netCorpusNeeded === 0) {
+          requiredSip = 0;
+          denom = rMonth > 0 ? ((Math.pow(1 + rMonth, nMonths) - 1) / rMonth) * (1 + rMonth) : nMonths;
+        } else if (rMonth <= 0) {
+          denom = nMonths;
+          requiredSip = Math.ceil(netCorpusNeeded / nMonths);
+        } else {
+          denom = ((Math.pow(1 + rMonth, nMonths) - 1) / rMonth) * (1 + rMonth);
+          requiredSip = denom > 0 ? Math.ceil(netCorpusNeeded / denom) : 0;
+        }
+
+        const sipDiff = safeCapacity - requiredSip;
+        const hasShortfall = requiredSip > safeCapacity;
+
+        // Month-by-month compounding simulation for exact years/months
+        let simCorpus = totalInvestedExisting;
+        let freedomMonths = 0;
+        let freedomFound = false;
+        const maxMonths = 50 * 12;
+
+        const targetToday = (ffTargetMonthlyExpense * 12) / withdrawalRateDec;
+        if (simCorpus >= targetToday && targetToday > 0) {
+          freedomMonths = 0;
+          freedomFound = true;
+        } else {
+          for (let m = 1; m <= maxMonths; m++) {
+            simCorpus = (simCorpus + safeCapacity) * (1 + rMonth);
+            const tYears = m / 12;
+            const expM = ffTargetMonthlyExpense * Math.pow(1 + inflationRateDec, tYears);
+            const targetM = (expM * 12) / withdrawalRateDec;
+            if (simCorpus >= targetM) {
+              freedomMonths = m;
+              freedomFound = true;
+              break;
+            }
+          }
+        }
+
+        const estYears = Math.floor(freedomMonths / 12);
+        const estMonths = freedomMonths % 12;
+
+        // Scenario Comparison: Conservative (8%), Base (10%), Optimistic (12%)
+        const scenarioList = [
+          { name: 'Conservative', rate: 8, label: '8% p.a. Assumed Return', badge: 'Defensive' },
+          { name: 'Base', rate: 10, label: '10% p.a. Assumed Return', badge: 'Balanced' },
+          { name: 'Optimistic', rate: 12, label: '12% p.a. Assumed Return', badge: 'Growth' }
+        ].map(sc => {
+          const scRateDec = sc.rate / 100;
+          const scRMonth = scRateDec / 12;
+          const scFvExisting = totalInvestedExisting * Math.pow(1 + scRateDec, horizon);
+          const scNetCorpus = Math.max(0, freedomCorpus - scFvExisting);
+          const scDenom = ((Math.pow(1 + scRMonth, nMonths) - 1) / scRMonth) * (1 + scRMonth);
+          const scReqSip = scNetCorpus === 0 ? 0 : Math.ceil(scNetCorpus / scDenom);
+          const scFvSip = safeCapacity * scDenom;
+          const scProjected = Math.round(scFvExisting + scFvSip);
+          return {
+            ...sc,
+            requiredSip: scReqSip,
+            projectedCorpus: scProjected,
+            corpus: freedomCorpus
+          };
+        });
+
+        // Readiness Score (0-100)
+        const efMonthsRatio = monthlyObligations > 0 ? (ffCurrentSavings / monthlyObligations) : 12;
+        const scoreEmergency = Math.min(25, (efMonthsRatio / 6) * 25);
+        let scoreDebt = 25;
+        const emiPctNum = Number(emiBurdenPct);
+        if (emiPctNum <= 15) scoreDebt = 25;
+        else if (emiPctNum <= 30) scoreDebt = 20;
+        else if (emiPctNum <= 45) scoreDebt = 12;
+        else if (emiPctNum <= 60) scoreDebt = 5;
+        else scoreDebt = 0;
+
+        const scoreSavings = Math.min(20, Math.max(0, (Number(savingsRatePct) / 35) * 20));
+        const capRatio = requiredSip > 0 ? (safeCapacity / requiredSip) : 1.0;
+        const scoreCapacity = Math.min(20, Math.max(0, capRatio * 20));
+        const scoreHorizon = Math.min(10, Math.max(2, (horizon / 10) * 10));
+
+        const readinessScore = Math.max(5, Math.min(98, Math.round(scoreEmergency + scoreDebt + scoreSavings + scoreCapacity + scoreHorizon)));
+        let scoreCategory = 'Starting';
+        let scoreColor = 'var(--fin-amber)';
+        let scoreSummary = 'Your journey begins with cash flow clarity. Establishing a 3-month safety buffer is your immediate high-impact win.';
+        if (readinessScore >= 80) {
+          scoreCategory = 'Strong';
+          scoreColor = 'var(--fin-green)';
+          scoreSummary = 'Your disciplined surplus, low debt obligations, and savings rate position you on an exceptional freedom trajectory.';
+        } else if (readinessScore >= 60) {
+          scoreCategory = 'Progressing';
+          scoreColor = 'var(--accent-gold)';
+          scoreSummary = 'Solid financial fundamentals; reinforcing your emergency cushion and sustaining monthly contributions will accelerate your milestone.';
+        } else if (readinessScore >= 40) {
+          scoreCategory = 'Building';
+          scoreColor = 'var(--fin-blue)';
+          scoreSummary = 'Active surplus and investment intent. Moderating discretionary spending and growing your safety reserve will boost overall resilience.';
+        }
+
+        return {
+          totalIncome,
+          totalEssential,
+          totalLifestyle,
+          totalEmis,
+          totalCustom,
+          totalExpenses,
+          totalInvestedExisting,
+          monthlySurplus,
+          monthlyObligations,
+          emergencyTarget,
+          emergencyGap,
+          emergencyReady,
+          emergencyMonthsToFund,
+          suggestedBuffer,
+          safeCapacity,
+          savingsRatePct,
+          emiBurdenPct,
+          futureMonthlyExpense,
+          futureAnnualExpense,
+          freedomCorpus,
+          existingInvestmentsFv,
+          netCorpusNeeded,
+          requiredSip,
+          sipDiff,
+          hasShortfall,
+          freedomFound,
+          estYears,
+          estMonths,
+          scenarioList,
+          readinessScore,
+          scoreCategory,
+          scoreColor,
+          scoreSummary,
+          scoreBreakdown: {
+            emergency: Math.round(scoreEmergency),
+            debt: Math.round(scoreDebt),
+            savings: Math.round(scoreSavings),
+            capacity: Math.round(scoreCapacity),
+            horizon: Math.round(scoreHorizon)
+          }
+        };
+      }, [
+        ffIncome, ffEssential, ffLifestyle, ffEmis, ffInvestments, ffCustomExpenses,
+        ffCurrentSavings, ffEmergencyMonths, ffGoalType, ffTargetMonthlyExpense,
+        ffInflationRate, ffWithdrawalRate, ffHorizonYears, ffReturnAssumption, ffRisk
+      ]);
 
       // Change chart preference
       const handleChartTypeChange = (type) => {
@@ -1881,6 +2167,106 @@
                     <li><span className="mode-check-icon">✓</span> Zero automatic AI chatbot interruptions while planning</li>
                   </ul>
                 </div>
+              </div>
+            </div>
+
+            {/* FLAGSHIP PROMINENT CARD: YOUR FINANCIAL FREEDOM JOURNEY */}
+            <div className="panel" style={{
+              marginBottom: '1.75rem',
+              background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(20, 24, 33, 0.6) 100%)',
+              border: '1px solid rgba(212, 175, 55, 0.35)',
+              borderRadius: 'var(--radius-lg)',
+              padding: '1.5rem',
+              position: 'relative',
+              overflow: 'hidden'
+            }}>
+              <div style={{ position: 'absolute', top: '-25px', right: '-25px', width: '120px', height: '120px', background: 'radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 70%)', pointerEvents: 'none' }}></div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
+                    <span className="badge badge-gold" style={{ fontSize: '0.68rem', letterSpacing: '0.05em' }}>CORE PLANNING SYSTEM</span>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>10-Step Interactive Framework</span>
+                  </div>
+                  <h2 style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                    Your Financial Freedom Journey
+                  </h2>
+                  <p style={{ fontSize: '0.88rem', color: 'var(--accent-gold)', fontWeight: 600, marginTop: '4px', marginBottom: '2px' }}>
+                    "Helping you plan toward financial freedom is our responsibility."
+                  </p>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>
+                    FinPilot turns your income, expenses, savings and goals into a clear financial roadmap. Projections are illustrative.
+                  </p>
+                </div>
+
+                <button 
+                  className="btn btn-gold"
+                  onClick={() => setActiveView('freedom')}
+                  style={{ padding: '0.65rem 1.25rem', fontSize: '0.88rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.45rem', boxShadow: '0 4px 14px rgba(212,175,55,0.25)' }}
+                >
+                  <span>Build My Financial Freedom Plan</span>
+                  <span>→</span>
+                </button>
+              </div>
+
+              {/* 6 Quick Metrics Grid */}
+              <div className="grid-3" style={{ gap: '0.85rem', marginBottom: '1rem' }}>
+                <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '0.85rem 1rem' }}>
+                  <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Monthly Income</div>
+                  <div className="num" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>
+                    {fmtINR(freedomCalculations.totalIncome)}
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '2px' }}>All income streams combined</div>
+                </div>
+
+                <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '0.85rem 1rem' }}>
+                  <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Monthly Expenses</div>
+                  <div className="num" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--fin-amber)', marginTop: '2px' }}>
+                    {fmtINR(freedomCalculations.totalExpenses)}
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '2px' }}>Essential + Lifestyle + EMIs</div>
+                </div>
+
+                <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '0.85rem 1rem' }}>
+                  <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Available Surplus</div>
+                  <div className="num" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--fin-green)', marginTop: '2px' }}>
+                    {fmtINR(freedomCalculations.monthlySurplus)}
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '2px' }}>Savings rate: {freedomCalculations.savingsRatePct}%</div>
+                </div>
+
+                <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '0.85rem 1rem' }}>
+                  <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Suggested Monthly SIP</div>
+                  <div className="num" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent-gold)', marginTop: '2px' }}>
+                    {fmtINR(freedomCalculations.requiredSip)}
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '2px' }}>Safe capacity: {fmtINR(freedomCalculations.safeCapacity)}/mo</div>
+                </div>
+
+                <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '0.85rem 1rem' }}>
+                  <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Freedom Corpus Target</div>
+                  <div className="num" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>
+                    {fmtINR(freedomCalculations.freedomCorpus)}
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '2px' }}>At {ffWithdrawalRate}% withdrawal assumption</div>
+                </div>
+
+                <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '0.85rem 1rem' }}>
+                  <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Estimated Timeline</div>
+                  <div className="num" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--fin-blue)', marginTop: '2px' }}>
+                    {freedomCalculations.freedomFound ? `${freedomCalculations.estYears}y ${freedomCalculations.estMonths}m` : `${ffHorizonYears} Years`}
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '2px' }}>Target Age: ~{ffAge + (freedomCalculations.freedomFound ? freedomCalculations.estYears : ffHorizonYears)}</div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', background: 'rgba(0,0,0,0.2)', padding: '0.65rem 1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                  Readiness Score: <strong style={{ color: freedomCalculations.scoreColor }}>{freedomCalculations.readinessScore}/100 ({freedomCalculations.scoreCategory})</strong> · Emergency Reserve: {freedomCalculations.emergencyReady ? '✓ Funded' : 'Action Recommended'}
+                </span>
+                <span style={{ fontSize: '0.72rem', color: 'var(--accent-gold)', cursor: 'pointer', fontWeight: 600 }} onClick={() => setActiveView('freedom')}>
+                  Open 10-Step Interactive Wizard & Scenarios →
+                </span>
               </div>
             </div>
 
@@ -5335,10 +5721,1139 @@
         );
       };
 
+
+      // ========================================================================
+      // 15. FINANCIAL FREEDOM PLANNER (Flagship 10-Step Wealth Freedom System)
+      // ========================================================================
+      const renderFinancialFreedomPlanner = () => {
+        const fc = freedomCalculations;
+
+        const stepsMeta = [
+          { num: 1, label: 'Income' },
+          { num: 2, label: 'Expenses' },
+          { num: 3, label: 'Savings & Assets' },
+          { num: 4, label: 'Freedom Goal' },
+          { num: 5, label: 'Risk & Horizon' },
+          { num: 6, label: 'Cash Flow & Buffer' },
+          { num: 7, label: 'Recommended SIP' },
+          { num: 8, label: 'Freedom Corpus' },
+          { num: 9, label: 'Years to Target' },
+          { num: 10, label: 'Action Roadmap' },
+        ];
+
+        const explainerLibrary = {
+          why_sip: {
+            title: 'Why this Monthly SIP?',
+            text: `FinPilot uses a reverse annuity solver: Target Corpus minus future value of existing investments gives the exact corpus to be accumulated. Factoring in ${ffReturnAssumption}% annual return over ${ffHorizonYears} years yields a disciplined monthly requirement of ${fmtINR(fc.requiredSip)}.`
+          },
+          why_target: {
+            title: 'Why this Freedom Corpus Target?',
+            text: `To support your target living expense of ${fmtINR(ffTargetMonthlyExpense)}/month today, factoring in ${ffInflationRate}% annual inflation over ${ffHorizonYears} years means your future monthly expense will be ${fmtINR(fc.futureMonthlyExpense)}. Under a ${ffWithdrawalRate}% safe withdrawal assumption, your required corpus is ${fmtINR(fc.freedomCorpus)} (${fmtINR(fc.futureAnnualExpense)} ÷ ${ffWithdrawalRate}%).`
+          },
+          why_inflation: {
+            title: 'Why does Inflation Matter?',
+            text: `Inflation erodes real purchasing power over time. At a ${ffInflationRate}% inflation rate, what costs ₹1,00,000 today will cost approximately ₹${Math.round(100000 * Math.pow(1 + ffInflationRate / 100, ffHorizonYears)).toLocaleString('en-IN')} in ${ffHorizonYears} years. Planning without inflation leads to severe retirement shortfalls.`
+          },
+          why_emergency: {
+            title: 'Why do I need an Emergency Fund?',
+            text: `An emergency fund of ${ffEmergencyMonths} months (₹${fc.emergencyTarget.toLocaleString('en-IN')}) prevents you from panic-selling equity investments at a loss during medical emergencies, job transitions, or market downturns.`
+          },
+          invest_more_5k: {
+            title: 'What happens if I invest ₹5,000 more per month?',
+            text: `Investing an extra ₹5,000/month across ${ffHorizonYears} years at ${ffReturnAssumption}% adds an estimated ₹${Math.round(5000 * ((Math.pow(1 + (ffReturnAssumption / 1200), ffHorizonYears * 12) - 1) / (ffReturnAssumption / 1200)) * (1 + ffReturnAssumption / 1200)).toLocaleString('en-IN')} to your final corpus, potentially accelerating your freedom milestone by 1 to 2 years!`
+          },
+          retire_5y_later: {
+            title: 'What if I target freedom 5 years later?',
+            text: `Extending your timeline by 5 years gives your compounding engine 60 additional months of exponential growth while reducing the required monthly SIP by 35% to 45%.`
+          },
+          explain_15: {
+            title: 'Explain this like I am 15 years old',
+            text: `Imagine you have a magic tree that drops fruit every year. Financial freedom means growing the tree big enough so the fruit it drops pays for all your food, games, and rent without you ever needing to chop down the tree itself!`
+          }
+        };
+
+        const handleSavePlan = async () => {
+          setPlanSaveStatus('Saving plan...');
+          try {
+            if (API_BASE && token) {
+              const payload = {
+                profile_data: {
+                  name: ffName, age: ffAge, retire_age: ffRetireAge, life_expectancy: ffLifeExpectancy,
+                  income: ffIncome, essential: ffEssential, lifestyle: ffLifestyle, emis: ffEmis,
+                  investments: ffInvestments, custom_expenses: ffCustomExpenses,
+                  savings: ffCurrentSavings, emergency_months: ffEmergencyMonths,
+                  goal: ffGoalType, target_expense: ffTargetMonthlyExpense,
+                  inflation: ffInflationRate, withdrawal: ffWithdrawalRate,
+                  horizon: ffHorizonYears, return_assumption: ffReturnAssumption, risk: ffRisk
+                },
+                results_data: fc
+              };
+              const res = await fetch(`${API_BASE}/api/freedom/profile`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify(payload)
+              });
+              if (res.ok) {
+                setPlanSaveStatus('Plan saved to cloud! ✓');
+                setTimeout(() => setPlanSaveStatus(''), 3000);
+                return;
+              }
+            }
+          } catch (e) {}
+          localStorage.setItem('fp_freedom_plan', JSON.stringify({
+            income: ffIncome, essential: ffEssential, lifestyle: ffLifestyle, emis: ffEmis,
+            investments: ffInvestments, savings: ffCurrentSavings, horizon: ffHorizonYears
+          }));
+          setPlanSaveStatus('Plan saved locally! ✓');
+          setTimeout(() => setPlanSaveStatus(''), 3000);
+        };
+
+        const handleAddCustomExpense = (e) => {
+          e.preventDefault();
+          if (!newCustomName.trim() || !newCustomAmount) return;
+          setFfCustomExpenses(prev => [
+            ...prev,
+            { id: Date.now(), name: newCustomName.trim(), amount: Number(newCustomAmount), note: newCustomNote.trim() }
+          ]);
+          setNewCustomName('');
+          setNewCustomAmount('');
+          setNewCustomNote('');
+        };
+
+        const handleDeleteCustomExpense = (id) => {
+          setFfCustomExpenses(prev => prev.filter(c => c.id !== id));
+        };
+
+        return (
+          <div style={{ maxWidth: '1120px', margin: '0 auto', paddingBottom: '3rem' }}>
+            {/* 1. Header & Value Proposition */}
+            <div style={{ marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                  <span className="badge badge-gold" style={{ fontSize: '0.7rem', letterSpacing: '0.06em' }}>CENTRAL PLANNING SYSTEM</span>
+                  <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>10-Step Comprehensive Roadmap</span>
+                </div>
+                <h1 style={{ fontSize: '1.65rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                  Financial Freedom Planner
+                </h1>
+                <p style={{ fontSize: '0.9rem', color: 'var(--accent-gold)', fontWeight: 600, marginTop: '4px', marginBottom: '2px' }}>
+                  "Helping you plan toward financial freedom is our responsibility."
+                </p>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
+                  FinPilot helps you understand cash flow, determine safe investment capacity, calculate a goal-oriented SIP, and project your journey to financial freedom.
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+                <button 
+                  className={`mode-indicator-pill ${planningMode === 'guide' ? 'mode-guide' : 'mode-solo'}`}
+                  onClick={() => handleModeChange(planningMode === 'guide' ? 'solo' : 'guide')}
+                  title="Click to toggle between Guide and Solo mode"
+                  style={{ cursor: 'pointer' }}
+                >
+                  <span className="mode-dot"></span>
+                  <span>{planningMode === 'guide' ? 'Guide Mode (AI-Assisted)' : 'Solo Mode (Independent)'}</span>
+                </button>
+
+                <button className="btn btn-outline btn-sm" onClick={handleSavePlan}>
+                  {planSaveStatus || '💾 Save Plan'}
+                </button>
+              </div>
+            </div>
+
+            {/* 2. Educational Disclaimer Alert */}
+            <div style={{
+              background: 'rgba(212, 175, 55, 0.06)',
+              border: '1px solid rgba(212, 175, 55, 0.25)',
+              borderRadius: 'var(--radius-md)',
+              padding: '0.65rem 1rem',
+              marginBottom: '1.25rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              fontSize: '0.78rem',
+              color: 'var(--text-secondary)'
+            }}>
+              <span>
+                ℹ️ <strong>Educational Notice:</strong> All projections, inflation adjustments, and withdrawal rates are illustrative planning assumptions, not financial guarantees. Actual market returns vary.
+              </span>
+              <span className="badge badge-neutral" style={{ fontSize: '0.68rem' }}>Assumptions-Driven</span>
+            </div>
+
+            {/* 3. 10-Step Interactive Horizontal Stepper */}
+            <div className="panel" style={{ padding: '0.85rem 1rem', marginBottom: '1.5rem', overflowX: 'auto' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', minWidth: '820px' }}>
+                {stepsMeta.map((s) => {
+                  const isCurrent = freedomStep === s.num;
+                  const isDone = freedomStep > s.num;
+                  return (
+                    <div
+                      key={s.num}
+                      onClick={() => setFreedomStep(s.num)}
+                      style={{
+                        flex: 1,
+                        padding: '0.55rem 0.45rem',
+                        borderRadius: 'var(--radius-sm)',
+                        background: isCurrent ? 'rgba(212, 175, 55, 0.15)' : (isDone ? 'var(--bg-surface)' : 'transparent'),
+                        border: isCurrent ? '1px solid var(--accent-gold)' : (isDone ? '1px solid var(--border-subtle)' : '1px solid transparent'),
+                        cursor: 'pointer',
+                        textAlign: 'center',
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      <div style={{ fontSize: '0.68rem', fontWeight: 700, color: isCurrent ? 'var(--accent-gold)' : (isDone ? 'var(--fin-green)' : 'var(--text-muted)') }}>
+                        {isDone ? '✓ ' : ''}STEP {s.num}
+                      </div>
+                      <div style={{ fontSize: '0.78rem', fontWeight: isCurrent ? 800 : 600, color: isCurrent ? 'var(--text-primary)' : 'var(--text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {s.label}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Guide Mode AI Callout (When active) */}
+            {planningMode === 'guide' && (
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(20, 24, 33, 0.4) 100%)',
+                border: '1px solid rgba(212, 175, 55, 0.35)',
+                borderRadius: 'var(--radius-md)',
+                padding: '0.85rem 1.15rem',
+                marginBottom: '1.5rem',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '0.85rem'
+              }}>
+                <div style={{ fontSize: '1.3rem', lineHeight: 1 }}>🤖</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', color: 'var(--accent-gold)', fontWeight: 800 }}>
+                    AI Wealth Mentor · Guide Mode Active
+                  </div>
+                  <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginTop: '2px', lineHeight: 1.5 }}>
+                    {freedomStep === 1 && "Start with all cash inflows. Distinguishing primary income from secondary or rental streams ensures your investment capacity is anchored on dependable liquidity."}
+                    {freedomStep === 2 && "Categorizing expenses into Essential, Lifestyle, and EMIs is crucial. If your income drops, essential commitments and debt service remain non-negotiable, while lifestyle costs can be dialled down."}
+                    {freedomStep === 3 && "Existing investments act as compounding catalysts. Every rupee already invested reduces the future monthly SIP you need to contribute."}
+                    {freedomStep === 4 && "Financial freedom is defined by what it takes to fund your lifestyle without working. We peg this to today's living cost, then adjust forward for inflation."}
+                    {freedomStep === 5 && "Longer time horizons give equity compounding time to smooth out cyclical pullbacks, enabling higher assumed returns."}
+                    {freedomStep === 6 && "FinPilot will not recommend investing 100% of your surplus. A safety buffer guards against emergencies without breaking your compounding cycle."}
+                    {freedomStep === 7 && "We calculate your recommended SIP using a reverse annuity equation. If there is a shortfall, review the 6 actionable strategies below."}
+                    {freedomStep === 8 && "Your target corpus divides your future annual living expense by the safe withdrawal rate (default 4%)."}
+                    {freedomStep === 9 && "This month-by-month simulation projects exactly when your wealth growth curve crosses the inflation-adjusted freedom corpus."}
+                    {freedomStep === 10 && "Here is your consolidated Financial Freedom Roadmap, readiness score, and mutual fund allocation recommendations."}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Solo Mode What Changed Diff Callout */}
+            {planningMode === 'solo' && soloBaselineSip !== null && soloBaselineSip !== fc.requiredSip && (
+              <div style={{
+                background: 'rgba(56, 189, 248, 0.08)',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
+                borderRadius: 'var(--radius-md)',
+                padding: '0.75rem 1rem',
+                marginBottom: '1.25rem',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                fontSize: '0.82rem'
+              }}>
+                <div>
+                  <strong style={{ color: 'var(--fin-blue)' }}>⚡ What Changed?</strong> Adjusting your parameters shifted required SIP from <strong>{fmtINR(soloBaselineSip)}</strong> to <strong>{fmtINR(fc.requiredSip)}</strong> ({fc.requiredSip > soloBaselineSip ? `+${fmtINR(fc.requiredSip - soloBaselineSip)}/mo` : `-${fmtINR(soloBaselineSip - fc.requiredSip)}/mo`}).
+                </div>
+                <button className="btn btn-subtle btn-sm" onClick={() => setSoloBaselineSip(fc.requiredSip)}>
+                  Accept as New Baseline
+                </button>
+              </div>
+            )}
+
+            {/* STEP 1: INCOME */}
+            {freedomStep === 1 && (
+              <div className="panel">
+                <div className="panel-title" style={{ marginBottom: '0.35rem' }}>Step 1: Your Income Streams</div>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+                  Enter all regular monthly household inflows. Only include reliable, predictable streams.
+                </p>
+
+                <div className="grid-2" style={{ gap: '1rem', marginBottom: '1.25rem' }}>
+                  <div>
+                    <label className="form-label">Full Name / Profile Name</label>
+                    <input className="form-input" type="text" value={ffName} onChange={e => setFfName(e.target.value)} />
+                  </div>
+                  <div>
+                    <label className="form-label">Primary Monthly Take-Home Salary / Income (₹)</label>
+                    <input className="form-input" type="number" value={ffIncome.monthly_income} onChange={e => setFfIncome(prev => ({ ...prev, monthly_income: Number(e.target.value) }))} />
+                  </div>
+                  <div>
+                    <label className="form-label">Additional Monthly Business / Freelance Income (₹)</label>
+                    <input className="form-input" type="number" value={ffIncome.additional_income} onChange={e => setFfIncome(prev => ({ ...prev, additional_income: Number(e.target.value) }))} />
+                  </div>
+                  <div>
+                    <label className="form-label">Monthly Rental / Passive Income (₹)</label>
+                    <input className="form-input" type="number" value={ffIncome.rental_income} onChange={e => setFfIncome(prev => ({ ...prev, rental_income: Number(e.target.value) }))} />
+                  </div>
+                  <div>
+                    <label className="form-label">Spouse / Partner Monthly Contribution (₹)</label>
+                    <input className="form-input" type="number" value={ffIncome.spouse_income} onChange={e => setFfIncome(prev => ({ ...prev, spouse_income: Number(e.target.value) }))} />
+                  </div>
+                </div>
+
+                <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Total Calculated Monthly Inflow</div>
+                    <div className="num" style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--accent-gold)' }}>
+                      {fmtINR(fc.totalIncome)}/month
+                    </div>
+                  </div>
+                  <button className="btn btn-gold" onClick={() => setFreedomStep(2)}>
+                    Next: Enter Expenses →
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 2: EXPENSES */}
+            {freedomStep === 2 && (
+              <div className="panel">
+                <div className="panel-title" style={{ marginBottom: '0.35rem' }}>Step 2: Monthly Expenses & Budget Breakdown</div>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+                  Structured around the Monthly Budget Planning workbook: Essential Expenses, Lifestyle Expenses, and EMIs.
+                </p>
+
+                {/* Section A: Essential Expenses */}
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <div style={{ fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span>🛡️ Essential Expenses</span>
+                    <span className="badge badge-neutral" style={{ fontSize: '0.68rem' }}>Total: {fmtINR(fc.totalEssential)}/mo</span>
+                  </div>
+                  <div className="grid-3" style={{ gap: '0.75rem' }}>
+                    <div>
+                      <label className="form-label">House Rent / Maintenance (₹)</label>
+                      <input className="form-input" type="number" value={ffEssential.rent_maintenance} onChange={e => setFfEssential(p => ({ ...p, rent_maintenance: Number(e.target.value) }))} />
+                    </div>
+                    <div>
+                      <label className="form-label">Property Tax (Monthly share) (₹)</label>
+                      <input className="form-input" type="number" value={ffEssential.property_tax} onChange={e => setFfEssential(p => ({ ...p, property_tax: Number(e.target.value) }))} />
+                    </div>
+                    <div>
+                      <label className="form-label">Utilities (Power, Water, Gas, WiFi) (₹)</label>
+                      <input className="form-input" type="number" value={ffEssential.utilities} onChange={e => setFfEssential(p => ({ ...p, utilities: Number(e.target.value) }))} />
+                    </div>
+                    <div>
+                      <label className="form-label">Groceries & Provisions (₹)</label>
+                      <input className="form-input" type="number" value={ffEssential.groceries} onChange={e => setFfEssential(p => ({ ...p, groceries: Number(e.target.value) }))} />
+                    </div>
+                    <div>
+                      <label className="form-label">Transportation / Fuel / Commute (₹)</label>
+                      <input className="form-input" type="number" value={ffEssential.transportation} onChange={e => setFfEssential(p => ({ ...p, transportation: Number(e.target.value) }))} />
+                    </div>
+                    <div>
+                      <label className="form-label">Medical & Healthcare (₹)</label>
+                      <input className="form-input" type="number" value={ffEssential.medical_expenses} onChange={e => setFfEssential(p => ({ ...p, medical_expenses: Number(e.target.value) }))} />
+                    </div>
+                    <div>
+                      <label className="form-label">Children School / Tuition Fees (₹)</label>
+                      <input className="form-input" type="number" value={ffEssential.school_fees} onChange={e => setFfEssential(p => ({ ...p, school_fees: Number(e.target.value) }))} />
+                    </div>
+                    <div>
+                      <label className="form-label">Life & Health Insurance Premiums (₹)</label>
+                      <input className="form-input" type="number" value={ffEssential.insurance_premiums} onChange={e => setFfEssential(p => ({ ...p, insurance_premiums: Number(e.target.value) }))} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section B: Lifestyle Expenses */}
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <div style={{ fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span>☕ Lifestyle & Discretionary Expenses</span>
+                    <span className="badge badge-neutral" style={{ fontSize: '0.68rem' }}>Total: {fmtINR(fc.totalLifestyle)}/mo</span>
+                  </div>
+                  <div className="grid-3" style={{ gap: '0.75rem' }}>
+                    <div>
+                      <label className="form-label">Domestic Help / Maid / Cook (₹)</label>
+                      <input className="form-input" type="number" value={ffLifestyle.maid} onChange={e => setFfLifestyle(p => ({ ...p, maid: Number(e.target.value) }))} />
+                    </div>
+                    <div>
+                      <label className="form-label">Shopping & Apparel (₹)</label>
+                      <input className="form-input" type="number" value={ffLifestyle.shopping} onChange={e => setFfLifestyle(p => ({ ...p, shopping: Number(e.target.value) }))} />
+                    </div>
+                    <div>
+                      <label className="form-label">Vacation / Travel Fund (₹)</label>
+                      <input className="form-input" type="number" value={ffLifestyle.travel} onChange={e => setFfLifestyle(p => ({ ...p, travel: Number(e.target.value) }))} />
+                    </div>
+                    <div>
+                      <label className="form-label">Dining Out & Entertainment (₹)</label>
+                      <input className="form-input" type="number" value={ffLifestyle.dining_entertainment} onChange={e => setFfLifestyle(p => ({ ...p, dining_entertainment: Number(e.target.value) }))} />
+                    </div>
+                    <div>
+                      <label className="form-label">Other Lifestyle & Hobbies (₹)</label>
+                      <input className="form-input" type="number" value={ffLifestyle.other_lifestyle} onChange={e => setFfLifestyle(p => ({ ...p, other_lifestyle: Number(e.target.value) }))} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section C: EMIs */}
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <div style={{ fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span>💳 Monthly EMIs & Debt Obligations</span>
+                    <span className="badge badge-neutral" style={{ fontSize: '0.68rem' }}>Total: {fmtINR(fc.totalEmis)}/mo</span>
+                  </div>
+                  <div className="grid-3" style={{ gap: '0.75rem' }}>
+                    <div>
+                      <label className="form-label">Home Loan EMI (₹)</label>
+                      <input className="form-input" type="number" value={ffEmis.home_loan_emi} onChange={e => setFfEmis(p => ({ ...p, home_loan_emi: Number(e.target.value) }))} />
+                    </div>
+                    <div>
+                      <label className="form-label">Car / Vehicle Loan EMI (₹)</label>
+                      <input className="form-input" type="number" value={ffEmis.car_loan_emi} onChange={e => setFfEmis(p => ({ ...p, car_loan_emi: Number(e.target.value) }))} />
+                    </div>
+                    <div>
+                      <label className="form-label">Personal Loan / Education Loan EMI (₹)</label>
+                      <input className="form-input" type="number" value={ffEmis.personal_loan_emi} onChange={e => setFfEmis(p => ({ ...p, personal_loan_emi: Number(e.target.value) }))} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section D: Custom Categories */}
+                <div style={{ marginBottom: '1.5rem', background: 'var(--bg-surface)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                  <div style={{ fontSize: '0.88rem', fontWeight: 700, marginBottom: '0.65rem' }}>Custom Expense Categories</div>
+                  {ffCustomExpenses.map((c) => (
+                    <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.45rem 0', borderBottom: '1px solid var(--border-subtle)', fontSize: '0.84rem' }}>
+                      <div>
+                        <strong>{c.name}</strong> {c.note && <span style={{ color: 'var(--text-muted)' }}>({c.note})</span>}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <span className="num" style={{ fontWeight: 700 }}>{fmtINR(c.amount)}</span>
+                        <button className="btn btn-subtle btn-sm" onClick={() => handleDeleteCustomExpense(c.id)} style={{ color: 'var(--fin-red)', padding: '0.2rem 0.5rem' }}>✕</button>
+                      </div>
+                    </div>
+                  ))}
+
+                  <form onSubmit={handleAddCustomExpense} style={{ marginTop: '0.85rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <input className="form-input" style={{ flex: 2, minWidth: '160px' }} placeholder="Expense Category Name" value={newCustomName} onChange={e => setNewCustomName(e.target.value)} />
+                    <input className="form-input" style={{ flex: 1, minWidth: '100px' }} type="number" placeholder="Amount (₹)" value={newCustomAmount} onChange={e => setNewCustomAmount(e.target.value)} />
+                    <input className="form-input" style={{ flex: 2, minWidth: '160px' }} placeholder="Optional note" value={newCustomNote} onChange={e => setNewCustomNote(e.target.value)} />
+                    <button type="submit" className="btn btn-outline btn-sm">+ Add Category</button>
+                  </form>
+                </div>
+
+                {/* Expense Summary & Next */}
+                <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                  <div>
+                    <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Total Calculated Monthly Expenses</div>
+                    <div className="num" style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--fin-amber)' }}>
+                      {fmtINR(fc.totalExpenses)}/month
+                    </div>
+                    <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                      Surplus: <strong style={{ color: 'var(--fin-green)' }}>{fmtINR(fc.monthlySurplus)}</strong> (Savings rate: {fc.savingsRatePct}%)
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.65rem' }}>
+                    <button className="btn btn-outline" onClick={() => setFreedomStep(1)}>← Back</button>
+                    <button className="btn btn-gold" onClick={() => setFreedomStep(3)}>Next: Existing Assets →</button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 3: SAVINGS & EXISTING INVESTMENTS */}
+            {freedomStep === 3 && (
+              <div className="panel">
+                <div className="panel-title" style={{ marginBottom: '0.35rem' }}>Step 3: Existing Savings & Investment Assets</div>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+                  Your current accumulated capital will compound over your investment horizon, reducing the monthly SIP needed.
+                </p>
+
+                <div className="grid-2" style={{ gap: '1rem', marginBottom: '1.5rem' }}>
+                  <div>
+                    <label className="form-label">Liquid Savings & Emergency Cash (Bank Savings / Liquid Fund) (₹)</label>
+                    <input className="form-input" type="number" value={ffCurrentSavings} onChange={e => setFfCurrentSavings(Number(e.target.value))} />
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>This forms your primary liquidity reserve</span>
+                  </div>
+
+                  <div>
+                    <label className="form-label">Mutual Funds (Current Value) (₹)</label>
+                    <input className="form-input" type="number" value={ffInvestments.mutual_funds} onChange={e => setFfInvestments(p => ({ ...p, mutual_funds: Number(e.target.value) }))} />
+                  </div>
+
+                  <div>
+                    <label className="form-label">Direct Stocks / Equities (Current Value) (₹)</label>
+                    <input className="form-input" type="number" value={ffInvestments.stocks} onChange={e => setFfInvestments(p => ({ ...p, stocks: Number(e.target.value) }))} />
+                  </div>
+
+                  <div>
+                    <label className="form-label">Fixed Deposits / PPF / Debt Instruments (₹)</label>
+                    <input className="form-input" type="number" value={ffInvestments.fixed_deposits} onChange={e => setFfInvestments(p => ({ ...p, fixed_deposits: Number(e.target.value) }))} />
+                  </div>
+
+                  <div>
+                    <label className="form-label">Other Investments (Gold, Real Estate plots, etc.) (₹)</label>
+                    <input className="form-input" type="number" value={ffInvestments.other_investments} onChange={e => setFfInvestments(p => ({ ...p, other_investments: Number(e.target.value) }))} />
+                  </div>
+                </div>
+
+                <div className="grid-2" style={{ gap: '1rem', marginBottom: '1.25rem' }}>
+                  <div style={{ background: 'var(--bg-surface)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                    <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Total Long-Term Investments</div>
+                    <div className="num" style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>{fmtINR(fc.totalInvestedExisting)}</div>
+                    <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '2px' }}>Will compound towards your freedom corpus</div>
+                  </div>
+
+                  <div style={{ background: 'var(--bg-surface)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                    <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Liquid Safety Cushion</div>
+                    <div className="num" style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--accent-gold)', marginTop: '2px' }}>{fmtINR(ffCurrentSavings)}</div>
+                    <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '2px' }}>Emergency coverage: {(ffCurrentSavings / (fc.monthlyObligations || 1)).toFixed(1)} months</div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <button className="btn btn-outline" onClick={() => setFreedomStep(2)}>← Back</button>
+                  <button className="btn btn-gold" onClick={() => setFreedomStep(4)}>Next: Define Freedom Goal →</button>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 4: FINANCIAL FREEDOM GOAL */}
+            {freedomStep === 4 && (
+              <div className="panel">
+                <div className="panel-title" style={{ marginBottom: '0.35rem' }}>Step 4: Define Your Financial Freedom Goal</div>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+                  Choose your primary objective and specify how much monthly living income you want your investments to generate in today's purchasing power.
+                </p>
+
+                <div className="grid-2" style={{ gap: '1rem', marginBottom: '1.5rem' }}>
+                  <div>
+                    <label className="form-label">Planning Goal Type</label>
+                    <select className="form-select" value={ffGoalType} onChange={e => setFfGoalType(e.target.value)}>
+                      <option value="financial_freedom">Financial Freedom (Work by Choice)</option>
+                      <option value="retirement">Early / Full Retirement</option>
+                      <option value="wealth_creation">Multi-Generational Wealth Creation</option>
+                      <option value="child_education">Child Higher Education Fund</option>
+                      <option value="house_purchase">Debt-Free Real Estate Purchase</option>
+                      <option value="custom">Custom Goal</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="form-label">Target Monthly Income in Today's Purchasing Power (₹)</label>
+                    <input className="form-input" type="number" value={ffTargetMonthlyExpense} onChange={e => setFfTargetMonthlyExpense(Number(e.target.value))} />
+                    <div style={{ display: 'flex', gap: '0.35rem', marginTop: '0.45rem', flexWrap: 'wrap' }}>
+                      <button type="button" className="btn btn-subtle btn-sm" onClick={() => setFfTargetMonthlyExpense(fc.totalExpenses)}>Use Current Expenses ({fmtINR(fc.totalExpenses)})</button>
+                      <button type="button" className="btn btn-subtle btn-sm" onClick={() => setFfTargetMonthlyExpense(35000)}>₹35,000</button>
+                      <button type="button" className="btn btn-subtle btn-sm" onClick={() => setFfTargetMonthlyExpense(50000)}>₹50,000</button>
+                      <button type="button" className="btn btn-subtle btn-sm" onClick={() => setFfTargetMonthlyExpense(100000)}>₹1,00,000</button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="form-label">Expected Annual Inflation Assumption: {ffInflationRate}%</label>
+                    <input type="range" min="4" max="10" step="0.5" value={ffInflationRate} onChange={e => setFfInflationRate(Number(e.target.value))} style={{ width: '100%', accentColor: 'var(--accent-gold)' }} />
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Historical Indian urban CPI is typically 5.5% - 7.0%</span>
+                  </div>
+
+                  <div>
+                    <label className="form-label">Illustrative Safe Withdrawal Rate Assumption: {ffWithdrawalRate}%</label>
+                    <div className="segmented-control" style={{ marginTop: '4px' }}>
+                      <button type="button" className={`segmented-btn ${ffWithdrawalRate === 3 ? 'active' : ''}`} onClick={() => setFfWithdrawalRate(3)}>3% (Conservative - 33.3x)</button>
+                      <button type="button" className={`segmented-btn ${ffWithdrawalRate === 4 ? 'active' : ''}`} onClick={() => setFfWithdrawalRate(4)}>4% (Standard - 25x)</button>
+                      <button type="button" className={`segmented-btn ${ffWithdrawalRate === 5 ? 'active' : ''}`} onClick={() => setFfWithdrawalRate(5)}>5% (Aggressive - 20x)</button>
+                    </div>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>This is an illustrative planning assumption, not a guaranteed safe rate.</span>
+                  </div>
+                </div>
+
+                <div style={{ background: 'var(--bg-surface)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', marginBottom: '1.25rem' }}>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
+                    Inflation & Target Corpus Projection:
+                  </div>
+                  <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                    At a <strong>{ffInflationRate}%</strong> inflation assumption, your ₹{ffTargetMonthlyExpense.toLocaleString('en-IN')}/month will require approximately <strong>{fmtINR(fc.futureMonthlyExpense)}/month</strong> in {ffHorizonYears} years. Under a <strong>{ffWithdrawalRate}%</strong> withdrawal assumption, your required target corpus is:
+                  </div>
+                  <div className="num" style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--accent-gold)', marginTop: '6px' }}>
+                    {fmtINR(fc.freedomCorpus)}
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <button className="btn btn-outline" onClick={() => setFreedomStep(3)}>← Back</button>
+                  <button className="btn btn-gold" onClick={() => setFreedomStep(5)}>Next: Risk & Horizon →</button>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 5: RISK & HORIZON */}
+            {freedomStep === 5 && (
+              <div className="panel">
+                <div className="panel-title" style={{ marginBottom: '0.35rem' }}>Step 5: Risk Profile & Time Horizon</div>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+                  Your time horizon and risk tolerance govern your expected compound return assumptions.
+                </p>
+
+                <div className="grid-3" style={{ gap: '1rem', marginBottom: '1.5rem' }}>
+                  <div>
+                    <label className="form-label">Current Age</label>
+                    <input className="form-input" type="number" value={ffAge} onChange={e => setFfAge(Number(e.target.value))} />
+                  </div>
+                  <div>
+                    <label className="form-label">Expected Retirement / Freedom Age</label>
+                    <input className="form-input" type="number" value={ffRetireAge} onChange={e => setFfRetireAge(Number(e.target.value))} />
+                  </div>
+                  <div>
+                    <label className="form-label">Life Expectancy</label>
+                    <input className="form-input" type="number" value={ffLifeExpectancy} onChange={e => setFfLifeExpectancy(Number(e.target.value))} />
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.45rem' }}>
+                    <label className="form-label" style={{ margin: 0 }}>Investment Time Horizon: <strong>{ffHorizonYears} Years</strong></label>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Target Age: {ffAge + ffHorizonYears}</span>
+                  </div>
+                  <input type="range" min="3" max="35" value={ffHorizonYears} onChange={e => setFfHorizonYears(Number(e.target.value))} style={{ width: '100%', accentColor: 'var(--accent-gold)' }} />
+                </div>
+
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <label className="form-label">Risk Comfort & Assumed Return</label>
+                  <div className="grid-3" style={{ gap: '0.85rem' }}>
+                    <div 
+                      onClick={() => { setFfRisk('conservative'); setFfReturnAssumption(8); }}
+                      style={{
+                        padding: '1rem',
+                        borderRadius: 'var(--radius-md)',
+                        background: ffRisk === 'conservative' ? 'rgba(212, 175, 55, 0.15)' : 'var(--bg-surface)',
+                        border: ffRisk === 'conservative' ? '2px solid var(--accent-gold)' : '1px solid var(--border-subtle)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <div style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Conservative</div>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '2px' }}>8% p.a. Assumed Return</div>
+                      <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', marginTop: '6px' }}>Prioritizes debt & hybrid funds with lower drawdown risk.</div>
+                    </div>
+
+                    <div 
+                      onClick={() => { setFfRisk('moderate'); setFfReturnAssumption(10); }}
+                      style={{
+                        padding: '1rem',
+                        borderRadius: 'var(--radius-md)',
+                        background: ffRisk === 'moderate' ? 'rgba(212, 175, 55, 0.15)' : 'var(--bg-surface)',
+                        border: ffRisk === 'moderate' ? '2px solid var(--accent-gold)' : '1px solid var(--border-subtle)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <div style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Moderate</div>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '2px' }}>10% p.a. Assumed Return</div>
+                      <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', marginTop: '6px' }}>Balanced mix of Index, Large Cap, and high-quality Flexi Cap funds.</div>
+                    </div>
+
+                    <div 
+                      onClick={() => { setFfRisk('aggressive'); setFfReturnAssumption(12); }}
+                      style={{
+                        padding: '1rem',
+                        borderRadius: 'var(--radius-md)',
+                        background: ffRisk === 'aggressive' ? 'rgba(212, 175, 55, 0.15)' : 'var(--bg-surface)',
+                        border: ffRisk === 'aggressive' ? '2px solid var(--accent-gold)' : '1px solid var(--border-subtle)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <div style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Aggressive</div>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '2px' }}>12% p.a. Assumed Return</div>
+                      <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', marginTop: '6px' }}>Higher allocation to Mid & Small Cap equities with higher volatility.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <button className="btn btn-outline" onClick={() => setFreedomStep(4)}>← Back</button>
+                  <button className="btn btn-gold" onClick={() => setFreedomStep(6)}>Next: Cash Flow & Buffer →</button>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 6: CASH FLOW ANALYSIS & SAFE INVESTMENT CAPACITY */}
+            {freedomStep === 6 && (
+              <div className="panel">
+                <div className="panel-title" style={{ marginBottom: '0.35rem' }}>Step 6: Cash Flow & Safe Investment Capacity</div>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+                  FinPilot calculates your available surplus and maintains a safety buffer before committing to investments.
+                </p>
+
+                <div className="grid-3" style={{ gap: '1rem', marginBottom: '1.5rem' }}>
+                  <div style={{ background: 'var(--bg-surface)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                    <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Total Inflow</div>
+                    <div className="num" style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>{fmtINR(fc.totalIncome)}</div>
+                  </div>
+
+                  <div style={{ background: 'var(--bg-surface)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                    <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Total Outflow</div>
+                    <div className="num" style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--fin-amber)', marginTop: '2px' }}>{fmtINR(fc.totalExpenses)}</div>
+                  </div>
+
+                  <div style={{ background: 'var(--bg-surface)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                    <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Monthly Surplus</div>
+                    <div className="num" style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--fin-green)', marginTop: '2px' }}>{fmtINR(fc.monthlySurplus)}</div>
+                  </div>
+                </div>
+
+                {/* Emergency Fund Analysis Card */}
+                <div style={{ background: 'var(--bg-surface)', padding: '1.15rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', marginBottom: '1.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    <div style={{ fontWeight: 800, fontSize: '0.95rem', color: 'var(--text-primary)' }}>
+                      🛡️ Emergency Fund Readiness ({ffEmergencyMonths} Months Target)
+                    </div>
+                    <div className="segmented-control">
+                      <button type="button" className={`segmented-btn ${ffEmergencyMonths === 3 ? 'active' : ''}`} onClick={() => setFfEmergencyMonths(3)}>3 Mos</button>
+                      <button type="button" className={`segmented-btn ${ffEmergencyMonths === 6 ? 'active' : ''}`} onClick={() => setFfEmergencyMonths(6)}>6 Mos</button>
+                      <button type="button" className={`segmented-btn ${ffEmergencyMonths === 9 ? 'active' : ''}`} onClick={() => setFfEmergencyMonths(9)}>9 Mos</button>
+                      <button type="button" className={`segmented-btn ${ffEmergencyMonths === 12 ? 'active' : ''}`} onClick={() => setFfEmergencyMonths(12)}>12 Mos</button>
+                    </div>
+                  </div>
+
+                  <div className="grid-3" style={{ gap: '0.75rem', marginBottom: '0.85rem' }}>
+                    <div>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Target Requirement</span>
+                      <div className="num" style={{ fontWeight: 800, fontSize: '1.05rem' }}>{fmtINR(fc.emergencyTarget)}</div>
+                    </div>
+                    <div>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Current Savings</span>
+                      <div className="num" style={{ fontWeight: 800, fontSize: '1.05rem' }}>{fmtINR(ffCurrentSavings)}</div>
+                    </div>
+                    <div>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Reserve Gap</span>
+                      <div className="num" style={{ fontWeight: 800, fontSize: '1.05rem', color: fc.emergencyReady ? 'var(--fin-green)' : 'var(--fin-amber)' }}>
+                        {fc.emergencyReady ? '₹0 (Fully Funded)' : fmtINR(fc.emergencyGap)}
+                      </div>
+                    </div>
+                  </div>
+
+                  {!fc.emergencyReady && (
+                    <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: 'var(--radius-sm)', padding: '0.65rem 0.85rem', fontSize: '0.78rem', color: 'var(--text-primary)' }}>
+                      ⚠️ <strong>Recommendation:</strong> Build your emergency reserve (gap of {fmtINR(fc.emergencyGap)}) before expanding high-risk long-term investment allocation. Estimated {fc.emergencyMonthsToFund} month(s) required using your surplus.
+                    </div>
+                  )}
+                </div>
+
+                {/* Safe Investment Capacity Result */}
+                <div style={{ background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(20, 24, 33, 0.6) 100%)', border: '1px solid rgba(212, 175, 55, 0.35)', borderRadius: 'var(--radius-md)', padding: '1.25rem', marginBottom: '1.25rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div>
+                      <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--accent-gold)', fontWeight: 800 }}>Calculated Safe Investment Capacity</div>
+                      <div className="num" style={{ fontSize: '1.65rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>
+                        {fmtINR(fc.safeCapacity)}/month
+                      </div>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '3px' }}>
+                        Monthly surplus: {fmtINR(fc.monthlySurplus)} · Suggested safety buffer: {fmtINR(fc.suggestedBuffer)}
+                      </div>
+                    </div>
+
+                    <button className="btn btn-gold" onClick={() => setFreedomStep(7)}>
+                      Next: Recommended SIP →
+                    </button>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                  <button className="btn btn-outline" onClick={() => setFreedomStep(5)}>← Back</button>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 7: RECOMMENDED SIP ENGINE */}
+            {freedomStep === 7 && (
+              <div className="panel">
+                <div className="panel-title" style={{ marginBottom: '0.35rem' }}>Step 7: Recommended Monthly SIP Engine</div>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+                  Using a reverse annuity equation, FinPilot calculates the exact SIP required to bridge the gap between existing investments and your freedom corpus.
+                </p>
+
+                <div className="grid-2" style={{ gap: '1rem', marginBottom: '1.5rem' }}>
+                  <div style={{ background: 'var(--bg-surface)', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                    <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Required Monthly SIP</div>
+                    <div className="num" style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--accent-gold)', marginTop: '2px' }}>
+                      {fmtINR(fc.requiredSip)}/month
+                    </div>
+                    <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                      Over {ffHorizonYears} years @ {ffReturnAssumption}% p.a. assumed return
+                    </div>
+                  </div>
+
+                  <div style={{ background: 'var(--bg-surface)', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                    <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Available Safe Capacity</div>
+                    <div className="num" style={{ fontSize: '1.75rem', fontWeight: 800, color: fc.hasShortfall ? 'var(--fin-amber)' : 'var(--fin-green)', marginTop: '2px' }}>
+                      {fmtINR(fc.safeCapacity)}/month
+                    </div>
+                    <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                      {fc.hasShortfall ? `Shortfall: ${fmtINR(Math.abs(fc.sipDiff))}/mo` : `Surplus cushion: ${fmtINR(fc.sipDiff)}/mo`}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Capacity Status Assessment */}
+                {!fc.hasShortfall ? (
+                  <div style={{ background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.3)', borderRadius: 'var(--radius-md)', padding: '1rem', marginBottom: '1.5rem' }}>
+                    <div style={{ fontWeight: 800, color: 'var(--fin-green)', fontSize: '0.95rem' }}>
+                      ✓ Your Investment Capacity Comfortably Covers this Goal!
+                    </div>
+                    <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
+                      Your safe monthly capacity of {fmtINR(fc.safeCapacity)} exceeds the required SIP of {fmtINR(fc.requiredSip)} with an unallocated cash buffer of {fmtINR(fc.sipDiff)}/month.
+                    </p>
+                  </div>
+                ) : (
+                  <div style={{ marginBottom: '1.5rem' }}>
+                    <div style={{ background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: 'var(--radius-md)', padding: '1rem', marginBottom: '1rem' }}>
+                      <div style={{ fontWeight: 800, color: 'var(--fin-amber)', fontSize: '0.92rem' }}>
+                        Notice: Current investment capacity may not fully cover this target within {ffHorizonYears} years.
+                      </div>
+                      <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
+                        Required SIP is {fmtINR(fc.requiredSip)}, leaving a monthly gap of {fmtINR(Math.abs(fc.sipDiff))}. Review the 6 strategic pathways below:
+                      </p>
+                    </div>
+
+                    <div className="grid-2" style={{ gap: '0.85rem' }}>
+                      <div style={{ background: 'var(--bg-surface)', padding: '0.85rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                        <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--accent-gold)' }}>Option A: Apply 10% Annual Step-Up SIP</div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Start with your ₹{fc.safeCapacity.toLocaleString('en-IN')}/mo capacity today and increase contribution by 10% annually as salary expands.</div>
+                      </div>
+
+                      <div style={{ background: 'var(--bg-surface)', padding: '0.85rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                        <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--accent-gold)' }}>Option B: Extend Horizon by 3 Years</div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Targeting {ffHorizonYears + 3} years reduces the monthly SIP burden by ~30% through compounding runway.</div>
+                      </div>
+
+                      <div style={{ background: 'var(--bg-surface)', padding: '0.85rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                        <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--accent-gold)' }}>Option C: Add Initial Capital Today</div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Deploying an extra lump sum today compounds across {ffHorizonYears} years to bridge the required SIP gap.</div>
+                      </div>
+
+                      <div style={{ background: 'var(--bg-surface)', padding: '0.85rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                        <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--accent-gold)' }}>Option D: Moderate Target Living Expense</div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Calibrating target living cost to ₹{Math.round(ffTargetMonthlyExpense * (fc.safeCapacity / (fc.requiredSip || 1))).toLocaleString('en-IN')}/mo aligns precisely with current capacity.</div>
+                      </div>
+
+                      <div style={{ background: 'var(--bg-surface)', padding: '0.85rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                        <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--accent-gold)' }}>Option E: Review Discretionary Expenses</div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Trimming ₹{Math.abs(fc.sipDiff).toLocaleString('en-IN')}/mo from lifestyle spending directly unlocks full required SIP.</div>
+                      </div>
+
+                      <div style={{ background: 'var(--bg-surface)', padding: '0.85rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                        <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--accent-gold)' }}>Option F: Balanced Hybrid Strategy</div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Combine a 2-year timeline extension with a modest 5% step-up for an effortless, stress-free path.</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <button className="btn btn-outline" onClick={() => setFreedomStep(6)}>← Back</button>
+                  <button className="btn btn-gold" onClick={() => setFreedomStep(8)}>Next: Freedom Corpus Breakdown →</button>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 8: FINANCIAL FREEDOM CORPUS */}
+            {freedomStep === 8 && (
+              <div className="panel">
+                <div className="panel-title" style={{ marginBottom: '0.35rem' }}>Step 8: Financial Freedom Corpus Math</div>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+                  How your target corpus is calculated from inflation-adjusted expenses, withdrawal rates, and existing investments.
+                </p>
+
+                <div className="grid-3" style={{ gap: '1rem', marginBottom: '1.5rem' }}>
+                  <div style={{ background: 'var(--bg-surface)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                    <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Target Freedom Corpus</div>
+                    <div className="num" style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--accent-gold)', marginTop: '2px' }}>{fmtINR(fc.freedomCorpus)}</div>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '2px' }}>Based on {ffWithdrawalRate}% withdrawal rate</div>
+                  </div>
+
+                  <div style={{ background: 'var(--bg-surface)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                    <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Existing Assets Compounded</div>
+                    <div className="num" style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>{fmtINR(fc.existingInvestmentsFv)}</div>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '2px' }}>Grows from {fmtINR(fc.totalInvestedExisting)}</div>
+                  </div>
+
+                  <div style={{ background: 'var(--bg-surface)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                    <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Net Corpus from Future SIP</div>
+                    <div className="num" style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--fin-blue)', marginTop: '2px' }}>{fmtINR(fc.netCorpusNeeded)}</div>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '2px' }}>To be accumulated via SIP</div>
+                  </div>
+                </div>
+
+                {/* Visual Progress Bar */}
+                <div style={{ background: 'var(--bg-surface)', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', marginBottom: '1.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem', fontSize: '0.82rem' }}>
+                    <span><strong>Corpus Accumulation Progress</strong></span>
+                    <span className="num" style={{ fontWeight: 800, color: 'var(--accent-gold)' }}>
+                      {((fc.existingInvestmentsFv / (fc.freedomCorpus || 1)) * 100).toFixed(1)}% of Target
+                    </span>
+                  </div>
+                  <div style={{ width: '100%', height: '10px', background: 'var(--bg-subtle)', borderRadius: '5px', overflow: 'hidden' }}>
+                    <div style={{ width: `${Math.min(100, (fc.existingInvestmentsFv / (fc.freedomCorpus || 1)) * 100)}%`, height: '100%', background: 'linear-gradient(90deg, var(--fin-blue), var(--accent-gold))', borderRadius: '5px' }}></div>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.45rem', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                    <span>Current: {fmtINR(fc.totalInvestedExisting)} (Grows to {fmtINR(fc.existingInvestmentsFv)})</span>
+                    <span>Target: {fmtINR(fc.freedomCorpus)}</span>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <button className="btn btn-outline" onClick={() => setFreedomStep(7)}>← Back</button>
+                  <button className="btn btn-gold" onClick={() => setFreedomStep(9)}>Next: Years to Freedom & Scenarios →</button>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 9: YEARS TO FREEDOM & SCENARIOS */}
+            {freedomStep === 9 && (
+              <div className="panel">
+                <div className="panel-title" style={{ marginBottom: '0.35rem' }}>Step 9: Years to Financial Freedom & Scenarios</div>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+                  Exact month-by-month compounding simulation and stress-testing across Conservative, Base, and Optimistic return scenarios.
+                </p>
+
+                {/* Milestone Projection Banner */}
+                <div style={{ background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(20, 24, 33, 0.7) 100%)', border: '1px solid rgba(212, 175, 55, 0.4)', borderRadius: 'var(--radius-md)', padding: '1.25rem', marginBottom: '1.5rem' }}>
+                  <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--accent-gold)', fontWeight: 800 }}>Simulation Result</div>
+                  <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '4px' }}>
+                    {fc.freedomFound
+                      ? `Under these assumptions, your projection reaches the target in approximately ${fc.estYears} years and ${fc.estMonths} months.`
+                      : `At current investment capacity, target requires extending your timeline beyond ${ffHorizonYears} years.`}
+                  </div>
+                  <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+                    Target Age: ~{ffAge + (fc.freedomFound ? fc.estYears : ffHorizonYears)} years old · Projected Milestone Corpus: {fmtINR(fc.freedomCorpus)}
+                  </div>
+                </div>
+
+                {/* 3 Scenarios Comparison */}
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.75rem' }}>
+                    Illustrative Scenario Matrix
+                  </div>
+                  <div className="grid-3" style={{ gap: '0.85rem' }}>
+                    {fc.scenarioList.map(sc => (
+                      <div key={sc.name} style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem' }}>
+                          <span style={{ fontWeight: 800, fontSize: '0.9rem' }}>{sc.name}</span>
+                          <span className="badge badge-neutral" style={{ fontSize: '0.68rem' }}>{sc.rate}% p.a.</span>
+                        </div>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Required Monthly SIP:</div>
+                        <div className="num" style={{ fontWeight: 800, fontSize: '1.15rem', color: 'var(--accent-gold)', marginBottom: '0.45rem' }}>
+                          {fmtINR(sc.requiredSip)}
+                        </div>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Projected Corpus ({ffHorizonYears} Yrs):</div>
+                        <div className="num" style={{ fontWeight: 700, fontSize: '0.98rem', color: 'var(--text-primary)' }}>
+                          {fmtINR(sc.projectedCorpus)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.45rem' }}>
+                    * Scenarios are illustrative planning models only. Market returns vary across market cycles and are not guaranteed.
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <button className="btn btn-outline" onClick={() => setFreedomStep(8)}>← Back</button>
+                  <button className="btn btn-gold" onClick={() => setFreedomStep(10)}>Next: Action Roadmap & Score →</button>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 10: ACTION PLAN, ROADMAP & FINANCIAL FREEDOM SCORE */}
+            {freedomStep === 10 && (
+              <div>
+                {/* Hero Freedom Summary Cards */}
+                <div className="grid-3" style={{ gap: '0.85rem', marginBottom: '1.25rem' }}>
+                  <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1rem' }}>
+                    <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Financial Freedom Corpus</div>
+                    <div className="num" style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--accent-gold)', marginTop: '2px' }}>{fmtINR(fc.freedomCorpus)}</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '2px' }}>Supports {fmtINR(fc.futureMonthlyExpense)}/mo in {ffHorizonYears} yrs</div>
+                  </div>
+
+                  <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1rem' }}>
+                    <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Recommended Monthly SIP</div>
+                    <div className="num" style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>{fmtINR(fc.requiredSip)}</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '2px' }}>Safe capacity: {fmtINR(fc.safeCapacity)}/mo</div>
+                  </div>
+
+                  <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1rem' }}>
+                    <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Projected Years to Freedom</div>
+                    <div className="num" style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--fin-blue)', marginTop: '2px' }}>
+                      {fc.freedomFound ? `${fc.estYears}y ${fc.estMonths}m` : `${ffHorizonYears} Years`}
+                    </div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '2px' }}>Target Age: ~{ffAge + (fc.freedomFound ? fc.estYears : ffHorizonYears)}</div>
+                  </div>
+                </div>
+
+                {/* Financial Freedom Readiness Score Panel */}
+                <div className="panel" style={{ marginBottom: '1.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+                    <div>
+                      <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Planning Readiness Score</div>
+                      <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>Financial Freedom Readiness</h2>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span className="badge" style={{ background: 'rgba(212, 175, 55, 0.15)', color: fc.scoreColor, fontWeight: 800, fontSize: '0.88rem', padding: '0.35rem 0.75rem' }}>
+                        {fc.readinessScore} / 100 · {fc.scoreCategory}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem', lineHeight: 1.5 }}>
+                    {fc.scoreSummary}
+                  </div>
+
+                  {/* 5 Score Components */}
+                  <div className="grid-2" style={{ gap: '0.65rem' }}>
+                    <div style={{ background: 'var(--bg-subtle)', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', fontSize: '0.8rem' }}>
+                      🛡️ <strong>Emergency Reserve:</strong> {fc.scoreBreakdown.emergency}/25 pts ({(ffCurrentSavings / (fc.monthlyObligations || 1)).toFixed(1)} months covered)
+                    </div>
+                    <div style={{ background: 'var(--bg-subtle)', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', fontSize: '0.8rem' }}>
+                      💳 <strong>Debt Burden:</strong> {fc.scoreBreakdown.debt}/25 pts ({fc.emiBurdenPct}% of income)
+                    </div>
+                    <div style={{ background: 'var(--bg-subtle)', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', fontSize: '0.8rem' }}>
+                      📈 <strong>Savings Rate:</strong> {fc.scoreBreakdown.savings}/20 pts ({fc.savingsRatePct}% monthly surplus)
+                    </div>
+                    <div style={{ background: 'var(--bg-subtle)', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', fontSize: '0.8rem' }}>
+                      🎯 <strong>Investment Capacity:</strong> {fc.scoreBreakdown.capacity}/20 pts ({fmtINR(fc.safeCapacity)}/mo safe capacity)
+                    </div>
+                    <div style={{ background: 'var(--bg-subtle)', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', fontSize: '0.8rem' }}>
+                      ⏳ <strong>Horizon Resilience:</strong> {fc.scoreBreakdown.horizon}/10 pts ({ffHorizonYears} years compounding)
+                    </div>
+                  </div>
+                </div>
+
+                {/* 7-Stage Visual Roadmap Timeline */}
+                <div className="panel" style={{ marginBottom: '1.5rem' }}>
+                  <div className="panel-title" style={{ marginBottom: '1rem' }}>7-Stage Financial Freedom Roadmap</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    {[
+                      { stage: 'Stage 1', title: 'Cash Flow Clarity & Budgeting', desc: `Inflow of ${fmtINR(fc.totalIncome)} and outflow of ${fmtINR(fc.totalExpenses)}, generating ${fmtINR(fc.monthlySurplus)} in monthly surplus.`, status: 'Active' },
+                      { stage: 'Stage 2', title: 'Emergency Fund Protection', desc: fc.emergencyReady ? `Completed! Fully funded with ${fmtINR(ffCurrentSavings)}.` : `Priority: Bridge ${fmtINR(fc.emergencyGap)} gap to complete ${ffEmergencyMonths}-month reserve.`, status: fc.emergencyReady ? 'Completed' : 'In Progress' },
+                      { stage: 'Stage 3', title: 'Debt & EMI Management', desc: `Debt servicing consumes ${fmtINR(fc.totalEmis)}/month (${fc.emiBurdenPct}% of income). Keep below 30%.`, status: Number(fc.emiBurdenPct) <= 30 ? 'Healthy' : 'High' },
+                      { stage: 'Stage 4', title: 'Disciplined Monthly SIP Allocation', desc: `Deploy ${fmtINR(fc.requiredSip)}/month into diversified, low-cost mutual fund categories.`, status: 'Ready' },
+                      { stage: 'Stage 5', title: 'Compounding & Growth Acceleration', desc: `Existing assets (${fmtINR(fc.totalInvestedExisting)}) compound to ${fmtINR(fc.existingInvestmentsFv)} over ${ffHorizonYears} years @ ${ffReturnAssumption}%.`, status: 'Scheduled' },
+                      { stage: 'Stage 6', title: 'Freedom Corpus Milestone', desc: `Accumulate target corpus of ${fmtINR(fc.freedomCorpus)} to secure your future living standard.`, status: 'Milestone' },
+                      { stage: 'Stage 7', title: 'Financial Freedom & Sustainable Withdrawals', desc: `Begin ${ffWithdrawalRate}% safe annual distributions (${fmtINR(fc.futureAnnualExpense)}/yr) without eroding principal.`, status: 'Destination' }
+                    ].map((stepItem, idx) => (
+                      <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem', padding: '0.75rem', background: 'var(--bg-surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                        <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--accent-gold)', color: '#000', fontWeight: 800, fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          {idx + 1}
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                            <div style={{ fontWeight: 800, fontSize: '0.88rem', color: 'var(--text-primary)' }}>{stepItem.title}</div>
+                            <span className="badge badge-neutral" style={{ fontSize: '0.68rem' }}>{stepItem.status}</span>
+                          </div>
+                          <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>{stepItem.desc}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Mutual Fund Category Integration & Contextual AI Chips */}
+                <div className="panel" style={{ marginBottom: '1.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+                    <div>
+                      <div className="panel-title">Explore Suitable Mutual-Fund Categories</div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                        Institutional diversification matched to your {ffRisk} profile and {ffHorizonYears}-year timeline.
+                      </div>
+                    </div>
+
+                    <button 
+                      className="btn btn-gold"
+                      onClick={() => {
+                        setMfGoal(ffGoalType === 'retirement' ? 'Retirement' : 'Wealth Creation');
+                        setSipIllustrate(fc.requiredSip || 5000);
+                        setYearsIllustrate(ffHorizonYears);
+                        setActiveView('mutualfunds');
+                      }}
+                    >
+                      Open Mutual Funds Explorer →
+                    </button>
+                  </div>
+
+                  <div className="grid-3" style={{ gap: '0.75rem' }}>
+                    <div style={{ background: 'var(--bg-surface)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                      <div style={{ fontWeight: 700, fontSize: '0.84rem' }}>Index & Large Cap</div>
+                      <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '2px' }}>Core foundation for steady, low-cost compounding.</div>
+                    </div>
+                    <div style={{ background: 'var(--bg-surface)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                      <div style={{ fontWeight: 700, fontSize: '0.84rem' }}>Flexi Cap & Multicap</div>
+                      <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '2px' }}>Dynamic allocation across market-cap leaders.</div>
+                    </div>
+                    <div style={{ background: 'var(--bg-surface)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                      <div style={{ fontWeight: 700, fontSize: '0.84rem' }}>Hybrid / Short-Term Debt</div>
+                      <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '2px' }}>Volatility dampener and emergency reserve parking.</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contextual AI Questions / Explainer Chips */}
+                <div className="panel" style={{ marginBottom: '1.5rem' }}>
+                  <div className="panel-title" style={{ marginBottom: '0.65rem' }}>💡 Ask the AI Wealth Mentor (Instant Explanations)</div>
+                  <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+                    {[
+                      { key: 'why_sip', label: 'Why this SIP?' },
+                      { key: 'why_target', label: 'Why this target corpus?' },
+                      { key: 'why_inflation', label: 'Why does inflation matter?' },
+                      { key: 'why_emergency', label: 'Why need an emergency fund?' },
+                      { key: 'invest_more_5k', label: 'What if I invest ₹5,000 more?' },
+                      { key: 'retire_5y_later', label: 'What if I retire 5 years later?' },
+                      { key: 'explain_15', label: 'Explain like I\'m 15' }
+                    ].map(chip => (
+                      <button
+                        key={chip.key}
+                        type="button"
+                        className={`btn btn-sm ${activeExplainerModal === chip.key ? 'btn-gold' : 'btn-outline'}`}
+                        onClick={() => setActiveExplainerModal(activeExplainerModal === chip.key ? null : chip.key)}
+                      >
+                        {chip.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {activeExplainerModal && explainerLibrary[activeExplainerModal] && (
+                    <div style={{
+                      background: 'rgba(212, 175, 55, 0.08)',
+                      border: '1px solid rgba(212, 175, 55, 0.35)',
+                      borderRadius: 'var(--radius-md)',
+                      padding: '1rem',
+                      position: 'relative'
+                    }}>
+                      <button 
+                        style={{ position: 'absolute', top: '8px', right: '10px', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1rem' }}
+                        onClick={() => setActiveExplainerModal(null)}
+                      >
+                        ✕
+                      </button>
+                      <div style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--accent-gold)', marginBottom: '0.35rem' }}>
+                        {explainerLibrary[activeExplainerModal].title}
+                      </div>
+                      <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                        {explainerLibrary[activeExplainerModal].text}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Final Nav Buttons */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <button className="btn btn-outline" onClick={() => setFreedomStep(9)}>← Back</button>
+                  <button className="btn btn-gold" onClick={() => setFreedomStep(1)}>Restart / Edit Inputs ↺</button>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      };
+
       // Navigation routing
       const renderContent = () => {
         switch (activeView) {
           case 'overview': return renderOverview();
+          case 'freedom': return renderFinancialFreedomPlanner();
           case 'stocks': return renderStockDetail();
           case 'markets': return renderMarketsOverview();
           case 'recommended': return renderRecommendedStocks();
@@ -5396,6 +6911,16 @@
               <button className={`nav-btn ${activeView === 'advisor' ? 'active' : ''}`} onClick={() => setActiveView('advisor')}>
                 <Icons.Advisor /> <span>AI Wealth Advisor</span>
               </button>
+              <button className={`nav-btn ${activeView === 'freedom' ? 'active' : ''}`} onClick={() => setActiveView('freedom')}>
+                <Icons.Freedom /> <span>Financial Freedom</span>
+                <span className="nav-badge" style={{ backgroundColor: 'var(--accent-gold)', color: '#000', fontWeight: 800, fontSize: '0.62rem', letterSpacing: '0.04em' }}>FLAGSHIP</span>
+              </button>
+              <button className={`nav-btn ${activeView === 'goals' ? 'active' : ''}`} onClick={() => setActiveView('goals')}>
+                <Icons.Goals /> <span>Goals</span>
+              </button>
+              <button className={`nav-btn ${activeView === 'simulator' ? 'active' : ''}`} onClick={() => setActiveView('simulator')}>
+                <Icons.Simulator /> <span>Wealth Simulator</span>
+              </button>
 
               <div className="sidebar-section-title">Markets & Research</div>
               <button className={`nav-btn ${activeView === 'markets' ? 'active' : ''}`} onClick={() => setActiveView('markets')}>
@@ -5414,12 +6939,6 @@
               <div className="sidebar-section-title">Execution & Tools</div>
               <button className={`nav-btn ${activeView === 'portfolio' ? 'active' : ''}`} onClick={() => setActiveView('portfolio')}>
                 <Icons.Portfolio /> <span>My Portfolio</span>
-              </button>
-              <button className={`nav-btn ${activeView === 'goals' ? 'active' : ''}`} onClick={() => setActiveView('goals')}>
-                <Icons.Goals /> <span>Goals</span>
-              </button>
-              <button className={`nav-btn ${activeView === 'simulator' ? 'active' : ''}`} onClick={() => setActiveView('simulator')}>
-                <Icons.Simulator /> <span>Wealth Simulator</span>
               </button>
               <button className={`nav-btn ${activeView === 'guardian' ? 'active' : ''}`} onClick={() => setActiveView('guardian')}>
                 <Icons.Guardian /> <span>Portfolio Guardian</span>

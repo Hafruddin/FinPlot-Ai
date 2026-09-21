@@ -8,7 +8,8 @@ FinPilot AI is an education-first personal wealth intelligence platform that com
 
 ## ✨ Features
 
-- 🧭 **Guide Mode & Solo Mode**: Choose between guided step-by-step financial roadmaps or independent exploratory planning.
+- 🌟 **Financial Freedom Planning System (Flagship)**: 10-Step end-to-end framework guiding users through Incomes, Categorized Expenses (Essential, Lifestyle, EMIs, Custom), Savings & Assets, Goal Definition, Safe Investment Capacity, Recommended Reverse SIP, Freedom Corpus ($Annual / Withdrawal\_Rate$), Years to Freedom month-by-month simulation, Conservative/Base/Optimistic Scenarios, and a 0–100 Readiness Scorecard.
+- 🧭 **Guide Mode & Solo Mode**: Choose between guided step-by-step AI mentoring or independent slider-driven scenario exploration with real-time *"What Changed?"* delta callouts.
 - 🎓 **Financial Learn Hub & Modules**: 10 financial literacy chapters covering fundamental ratios, compounding, asset allocation, and market cycles.
 - 🤖 **AI Financial Mentor & Copilot**: Interactive context-aware tutor that explains complex concepts (P/E ratios, risk management, inflation drag) with zero financial jargon.
 - 📊 **Real-Time Markets & Candlestick Charts**: Live market status for NSE/BSE, indices (Nifty 50, Sensex), multi-timeframe interactive candlestick/line/bar charts with volume histograms and crosshair inspection.
