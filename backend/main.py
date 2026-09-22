@@ -55,6 +55,7 @@ from backend.services.simulation_engine import SimulationEngine
 from backend.services.decision_quality_service import DecisionQualityService
 from backend.services.market.market_service import market_service
 from backend.api.market_routes import router as market_router
+from backend.api.stock_routes import router as stock_router
 
 # Root directory for serving static frontend files
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -66,6 +67,7 @@ app = FastAPI(title="FinPilot AI Core API", version="1.0.0")
 
 # Register Real Market Data Gateway Router
 app.include_router(market_router)
+app.include_router(stock_router)
 
 # Enable CORS for frontend clients
 app.add_middleware(
