@@ -10,6 +10,7 @@ from .market_cache import market_cache
 from .kite_service import kite_service
 from .alphavantage_service import alphavantage_service
 from .dataset_loader import dataset_loader
+from .gemini_service import gemini_market_service
 
 logger = logging.getLogger("finpilot.market_service")
 
@@ -242,7 +243,36 @@ BASELINE_STOCKS = [
         "52_week_low": 2865.00,
         "exchange": "NSE",
         "is_index": False
-    }
+    },
+    {"symbol": "HCLTECH", "name": "HCL Technologies Ltd", "price": 1624.0, "change": 18.5, "change_percent": 1.15, "open": 1612.0, "high": 1630.0, "low": 1608.0, "previous_close": 1605.5, "volume": 3240000, "market_cap": "₹4.40 Lakh Cr", "pe_ratio": 26.3, "sector": "Information Technology", "52_week_high": 1950.0, "52_week_low": 1350.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "WIPRO", "name": "Wipro Ltd", "price": 298.5, "change": -2.1, "change_percent": -0.70, "open": 301.0, "high": 303.5, "low": 297.2, "previous_close": 300.6, "volume": 7800000, "market_cap": "₹3.09 Lakh Cr", "pe_ratio": 20.1, "sector": "Information Technology", "52_week_high": 380.0, "52_week_low": 270.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "AXISBANK", "name": "Axis Bank Ltd", "price": 1185.0, "change": 9.5, "change_percent": 0.81, "open": 1178.0, "high": 1192.0, "low": 1174.0, "previous_close": 1175.5, "volume": 8600000, "market_cap": "₹3.64 Lakh Cr", "pe_ratio": 14.2, "sector": "Banking & Finance", "52_week_high": 1340.0, "52_week_low": 980.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "BAJFINANCE", "name": "Bajaj Finance Ltd", "price": 7845.0, "change": 62.0, "change_percent": 0.80, "open": 7800.0, "high": 7880.0, "low": 7790.0, "previous_close": 7783.0, "volume": 1250000, "market_cap": "₹4.72 Lakh Cr", "pe_ratio": 31.5, "sector": "Banking & Finance", "52_week_high": 9000.0, "52_week_low": 6200.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "ADANIPORTS", "name": "Adani Ports & SEZ", "price": 1315.0, "change": 10.8, "change_percent": 0.83, "open": 1308.0, "high": 1322.0, "low": 1304.0, "previous_close": 1304.2, "volume": 3640000, "market_cap": "₹2.83 Lakh Cr", "pe_ratio": 34.8, "sector": "Infrastructure", "52_week_high": 1620.0, "52_week_low": 980.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "HINDUNILVR", "name": "Hindustan Unilever Ltd", "price": 2335.0, "change": -15.0, "change_percent": -0.64, "open": 2352.0, "high": 2358.0, "low": 2330.0, "previous_close": 2350.0, "volume": 1820000, "market_cap": "₹5.47 Lakh Cr", "pe_ratio": 52.3, "sector": "FMCG", "52_week_high": 2750.0, "52_week_low": 2200.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "NTPC", "name": "NTPC Ltd", "price": 372.0, "change": 3.5, "change_percent": 0.95, "open": 369.5, "high": 374.5, "low": 368.0, "previous_close": 368.5, "volume": 19200000, "market_cap": "₹3.61 Lakh Cr", "pe_ratio": 16.8, "sector": "Power & Utilities", "52_week_high": 448.0, "52_week_low": 290.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "POWERGRID", "name": "Power Grid Corporation", "price": 318.5, "change": 2.2, "change_percent": 0.70, "open": 316.8, "high": 320.5, "low": 315.8, "previous_close": 316.3, "volume": 11500000, "market_cap": "₹2.96 Lakh Cr", "pe_ratio": 18.4, "sector": "Power & Utilities", "52_week_high": 390.0, "52_week_low": 240.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "SUNPHARMA", "name": "Sun Pharmaceutical Industries", "price": 1842.0, "change": 22.5, "change_percent": 1.24, "open": 1825.0, "high": 1850.0, "low": 1820.0, "previous_close": 1819.5, "volume": 2480000, "market_cap": "₹4.42 Lakh Cr", "pe_ratio": 38.2, "sector": "Pharmaceuticals", "52_week_high": 1960.0, "52_week_low": 1350.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "TECHM", "name": "Tech Mahindra Ltd", "price": 1645.0, "change": -8.5, "change_percent": -0.51, "open": 1655.0, "high": 1662.0, "low": 1640.0, "previous_close": 1653.5, "volume": 2960000, "market_cap": "₹1.60 Lakh Cr", "pe_ratio": 28.7, "sector": "Information Technology", "52_week_high": 1850.0, "52_week_low": 1200.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "LTIM", "name": "LTIMindtree Ltd", "price": 5280.0, "change": 45.0, "change_percent": 0.86, "open": 5240.0, "high": 5295.0, "low": 5230.0, "previous_close": 5235.0, "volume": 480000, "market_cap": "₹1.56 Lakh Cr", "pe_ratio": 32.4, "sector": "Information Technology", "52_week_high": 6600.0, "52_week_low": 4600.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "ULTRACEMCO", "name": "UltraTech Cement Ltd", "price": 10845.0, "change": 95.0, "change_percent": 0.88, "open": 10760.0, "high": 10870.0, "low": 10740.0, "previous_close": 10750.0, "volume": 340000, "market_cap": "₹3.12 Lakh Cr", "pe_ratio": 42.5, "sector": "Materials & Cement", "52_week_high": 12200.0, "52_week_low": 8500.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "TITAN", "name": "Titan Company Ltd", "price": 3285.0, "change": 28.5, "change_percent": 0.87, "open": 3260.0, "high": 3296.0, "low": 3252.0, "previous_close": 3256.5, "volume": 820000, "market_cap": "₹2.92 Lakh Cr", "pe_ratio": 86.4, "sector": "Consumer Discretionary", "52_week_high": 3900.0, "52_week_low": 2700.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "ONGC", "name": "Oil & Natural Gas Corporation", "price": 282.5, "change": 1.8, "change_percent": 0.64, "open": 281.0, "high": 284.5, "low": 279.8, "previous_close": 280.7, "volume": 22800000, "market_cap": "₹3.56 Lakh Cr", "pe_ratio": 8.4, "sector": "Energy & Oil", "52_week_high": 345.0, "52_week_low": 220.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "DRREDDY", "name": "Dr. Reddy's Laboratories", "price": 6215.0, "change": -35.0, "change_percent": -0.56, "open": 6252.0, "high": 6265.0, "low": 6200.0, "previous_close": 6250.0, "volume": 680000, "market_cap": "₹1.04 Lakh Cr", "pe_ratio": 20.8, "sector": "Pharmaceuticals", "52_week_high": 7200.0, "52_week_low": 5400.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "BAJAJFINSV", "name": "Bajaj Finserv Ltd", "price": 1895.0, "change": 12.5, "change_percent": 0.66, "open": 1884.0, "high": 1902.0, "low": 1880.0, "previous_close": 1882.5, "volume": 1640000, "market_cap": "₹3.02 Lakh Cr", "pe_ratio": 22.6, "sector": "Banking & Finance", "52_week_high": 2200.0, "52_week_low": 1550.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "TATASTEEL", "name": "Tata Steel Ltd", "price": 142.8, "change": 1.1, "change_percent": 0.78, "open": 142.0, "high": 143.9, "low": 141.5, "previous_close": 141.7, "volume": 38400000, "market_cap": "₹1.77 Lakh Cr", "pe_ratio": 18.2, "sector": "Metals & Mining", "52_week_high": 185.0, "52_week_low": 120.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "JSWSTEEL", "name": "JSW Steel Ltd", "price": 905.0, "change": -6.5, "change_percent": -0.71, "open": 912.0, "high": 915.0, "low": 902.0, "previous_close": 911.5, "volume": 5200000, "market_cap": "₹2.21 Lakh Cr", "pe_ratio": 22.4, "sector": "Metals & Mining", "52_week_high": 1040.0, "52_week_low": 750.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "ASIANPAINT", "name": "Asian Paints Ltd", "price": 2485.0, "change": -18.0, "change_percent": -0.72, "open": 2505.0, "high": 2510.0, "low": 2480.0, "previous_close": 2503.0, "volume": 1480000, "market_cap": "₹2.37 Lakh Cr", "pe_ratio": 44.8, "sector": "Consumer Discretionary", "52_week_high": 3200.0, "52_week_low": 2200.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "DIVISLAB", "name": "Divi's Laboratories", "price": 5645.0, "change": 42.0, "change_percent": 0.75, "open": 5610.0, "high": 5662.0, "low": 5600.0, "previous_close": 5603.0, "volume": 320000, "market_cap": "₹1.50 Lakh Cr", "pe_ratio": 68.2, "sector": "Pharmaceuticals", "52_week_high": 6200.0, "52_week_low": 4400.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "GRASIM", "name": "Grasim Industries Ltd", "price": 2580.0, "change": 15.0, "change_percent": 0.58, "open": 2568.0, "high": 2592.0, "low": 2562.0, "previous_close": 2565.0, "volume": 1120000, "market_cap": "₹1.69 Lakh Cr", "pe_ratio": 19.6, "sector": "Materials & Cement", "52_week_high": 2900.0, "52_week_low": 2100.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "BPCL", "name": "Bharat Petroleum Corporation", "price": 348.5, "change": 3.2, "change_percent": 0.93, "open": 346.0, "high": 350.5, "low": 344.8, "previous_close": 345.3, "volume": 14800000, "market_cap": "₹1.51 Lakh Cr", "pe_ratio": 7.8, "sector": "Energy & Oil", "52_week_high": 420.0, "52_week_low": 280.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "HINDALCO", "name": "Hindalco Industries Ltd", "price": 655.0, "change": 5.5, "change_percent": 0.85, "open": 650.0, "high": 658.5, "low": 648.0, "previous_close": 649.5, "volume": 9600000, "market_cap": "₹1.47 Lakh Cr", "pe_ratio": 14.8, "sector": "Metals & Mining", "52_week_high": 780.0, "52_week_low": 500.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "EICHERMOT", "name": "Eicher Motors Ltd", "price": 4825.0, "change": -22.0, "change_percent": -0.45, "open": 4850.0, "high": 4858.0, "low": 4818.0, "previous_close": 4847.0, "volume": 420000, "market_cap": "₹1.33 Lakh Cr", "pe_ratio": 28.5, "sector": "Automobile & EV", "52_week_high": 5500.0, "52_week_low": 3800.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "COALINDIA", "name": "Coal India Ltd", "price": 484.0, "change": 4.5, "change_percent": 0.94, "open": 480.5, "high": 486.5, "low": 479.0, "previous_close": 479.5, "volume": 16800000, "market_cap": "₹2.98 Lakh Cr", "pe_ratio": 9.2, "sector": "Energy & Mining", "52_week_high": 560.0, "52_week_low": 380.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "HEROMOTOCO", "name": "Hero MotoCorp Ltd", "price": 4125.0, "change": 38.5, "change_percent": 0.94, "open": 4090.0, "high": 4140.0, "low": 4082.0, "previous_close": 4086.5, "volume": 690000, "market_cap": "₹82,400 Cr", "pe_ratio": 19.4, "sector": "Automobile & EV", "52_week_high": 4800.0, "52_week_low": 3400.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "APOLLOHOSP", "name": "Apollo Hospitals Enterprise", "price": 6820.0, "change": 52.0, "change_percent": 0.77, "open": 6775.0, "high": 6840.0, "low": 6762.0, "previous_close": 6768.0, "volume": 285000, "market_cap": "₹97,800 Cr", "pe_ratio": 75.2, "sector": "Healthcare", "52_week_high": 7500.0, "52_week_low": 5200.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "INDUSINDBK", "name": "IndusInd Bank Ltd", "price": 1045.0, "change": -8.5, "change_percent": -0.81, "open": 1056.0, "high": 1058.0, "low": 1042.0, "previous_close": 1053.5, "volume": 8400000, "market_cap": "₹81,200 Cr", "pe_ratio": 11.2, "sector": "Banking & Finance", "52_week_high": 1400.0, "52_week_low": 860.0, "exchange": "NSE", "is_index": False},
+    {"symbol": "CIPLA", "name": "Cipla Ltd", "price": 1548.0, "change": 12.5, "change_percent": 0.81, "open": 1538.0, "high": 1555.0, "low": 1534.0, "previous_close": 1535.5, "volume": 2250000, "market_cap": "₹1.25 Lakh Cr", "pe_ratio": 25.6, "sector": "Pharmaceuticals", "52_week_high": 1750.0, "52_week_low": 1200.0, "exchange": "NSE", "is_index": False},
 ]
 
 BASELINE_INDICES = [
@@ -407,6 +437,20 @@ class MarketService:
             merged["data_mode"] = "LIVE"
             merged["source"] = "Alpha Vantage"
             return merged
+
+        # 2.5 Try Gemini AI Market Intelligence (covers full NSE/BSE universe)
+        try:
+            ref_stock = self._stocks.get(sym)
+            gemini_q = await gemini_market_service.get_realtime_quote(sym, ref_stock)
+            if gemini_q:
+                base = self._stocks.get(sym, {})
+                merged = dict(base)
+                merged.update(gemini_q)
+                merged["data_mode"] = "LIVE"
+                merged["source"] = "Gemini AI Market Gateway"
+                return merged
+        except Exception as _ge:
+            logger.warning(f"Gemini quote failed for {sym}: {_ge}")
 
         # 3. Check Authentic Market Datasets
         if dataset_loader.has_symbol(sym):

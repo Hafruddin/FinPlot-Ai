@@ -2475,6 +2475,7 @@
         explanation: "Out of ₹50 Lakh, you contributed only ₹12 Lakh (24%), while compound growth generated ₹38 Lakh (76%)!"
       });
       const [dailyQuizFeedback, setDailyQuizFeedback] = useState(null);
+      const [dailyQuizSelected, setDailyQuizSelected] = useState(null);
 
       // Historical Simulation Studio State (Strict Anti-Future-Leakage)
       const [simSession, setSimSession] = useState(null);
@@ -2981,11 +2982,14 @@
       };
 
       const createSyntheticCandles = (symbol, range) => {
-        const stock = (stocksList || []).find(s => s.symbol === symbol) || (DEFAULT_CURATED_STOCKS || []).find(s => s.symbol === symbol);
-        const basePrice = stock ? stock.price : 1500;
+        const stock = (stocksList || []).find(s => s.symbol === symbol)
+          || (DEFAULT_CURATED_STOCKS || []).find(s => s.symbol === symbol);
+        const basePrice = (stock && stock.price > 0) ? stock.price : 1500;
 
+        // Use AUTHENTIC_DATASETS if available (5 pre-seeded stocks: RELIANCE/TCS/HDFCBANK/SBIN/MARUTI)
         if (typeof AUTHENTIC_DATASETS !== 'undefined' && AUTHENTIC_DATASETS[symbol] && AUTHENTIC_DATASETS[symbol].length > 0) {
           const authList = AUTHENTIC_DATASETS[symbol].map(c => ({ ...c }));
+          // Anchor last candle to live price
           if (stock && authList.length > 0) {
             const last = authList[authList.length - 1];
             last.close = stock.price;
@@ -2993,57 +2997,69 @@
             last.high = Math.max(stock.high || last.high, stock.price);
             last.low = Math.min(stock.low || last.low, stock.price);
           }
-          if (range === '1W') {
-            return authList.slice(-5);
-          }
+          if (range === '1W') return authList.slice(-5);
           if (range === '1D') {
-            const times = ['09:15', '09:45', '10:15', '10:45', '11:15', '11:45', '12:15', '12:45', '13:15', '13:45', '14:15', '14:45', '15:15', '15:30'];
-            let cur = (stock ? stock.open : basePrice) || basePrice;
+            // Generate intraday from open to current price
+            const times = ['09:15','09:45','10:15','10:45','11:15','11:45','12:15','12:45','13:15','13:45','14:15','14:45','15:15','15:30'];
+            let cur = (stock && stock.open) ? stock.open : basePrice * 0.998;
             const intraday = [];
             for (let i = 0; i < times.length; i++) {
               const isLast = (i === times.length - 1);
               const nextClose = isLast ? (stock ? stock.price : cur) : Number((cur + (Math.random() - 0.48) * (basePrice * 0.003)).toFixed(2));
               const o = cur;
-              const c = nextClose;
+              const c = Math.max(1, nextClose);
               const h = Number((Math.max(o, c) + Math.random() * (basePrice * 0.002)).toFixed(2));
               const l = Number((Math.min(o, c) - Math.random() * (basePrice * 0.002)).toFixed(2));
-              intraday.push({
-                time: times[i],
-                open: o,
-                high: h,
-                low: l,
-                close: c,
-                volume: Math.floor(Math.random() * 80000 + 20000)
-              });
+              intraday.push({ time: times[i], open: o, high: h, low: Math.max(1, l), close: c, volume: Math.floor(Math.random() * 80000 + 20000) });
               cur = c;
             }
             return intraday;
           }
+          if (range === '1M') return authList;
+          if (range === '3M') return authList; // stretch authentic data for 3M view
           return authList;
         }
 
-        const count = range === '1D' ? 14 : range === '1W' ? 5 : range === '1M' ? 20 : range === '1Y' ? 40 : 25;
-        let curr = basePrice * (range === '1D' ? 0.995 : 0.96);
+        // Full synthetic path for all 30+ stocks without authentic dataset entries
+        const timeframeCfg = {
+          '1D':  { count: 14, volatility: 0.003, label: (i) => ['09:15','09:45','10:15','10:45','11:15','11:45','12:15','12:45','13:15','13:45','14:15','14:45','15:15','15:30'][i] || '15:30' },
+          '1W':  { count: 5,   volatility: 0.008, label: (i) => ['Mon','Tue','Wed','Thu','Fri'][i] || `D${i+1}` },
+          '1M':  { count: 22,  volatility: 0.012, label: (i) => `D${i+1}` },
+          '3M':  { count: 65,  volatility: 0.014, label: (i) => `W${Math.floor(i/5)+1}-D${(i%5)+1}` },
+          '1Y':  { count: 52,  volatility: 0.018, label: (i) => `W${i+1}` },
+          '5Y':  { count: 60,  volatility: 0.025, label: (i) => `M${i+1}` },
+        };
+        const cfg = timeframeCfg[range] || timeframeCfg['1M'];
+        const { count, volatility, label } = cfg;
+
+        // Walk backward from current price to generate realistic price history
+        // Final candle always = live price, walk backward so price series lands there
+        const pricePoints = [basePrice];
+        for (let i = 1; i < count; i++) {
+          const prev = pricePoints[0];
+          const drift = (Math.random() - 0.5) * 2 * volatility * prev;
+          pricePoints.unshift(Math.max(1, prev - drift));
+        }
+
         const res = [];
-        const times1D = ['09:15', '09:45', '10:15', '10:45', '11:15', '11:45', '12:15', '12:45', '13:15', '13:45', '14:15', '14:45', '15:15', '15:30'];
         for (let i = 0; i < count; i++) {
           const isLast = (i === count - 1);
-          const change = isLast ? 0 : (Math.random() - 0.48) * (curr * (range === '1D' ? 0.004 : 0.015));
-          const o = Math.round(curr * 100) / 100;
-          const c = isLast ? (stock ? stock.price : o) : Math.round((curr + change) * 100) / 100;
-          const h = Math.round(Math.max(o, c) + Math.random() * (curr * 0.005) * 100) / 100;
-          const l = Math.round(Math.min(o, c) - Math.random() * (curr * 0.005) * 100) / 100;
-          const vol = Math.floor(Math.random() * 50000 + 10000);
-          const tLabel = range === '1D' ? (times1D[i] || '15:30') : `Day ${i + 1}`;
+          const midClose = pricePoints[i + 1] !== undefined ? pricePoints[i + 1] : basePrice;
+          const midOpen = pricePoints[i];
+          const o = isLast && stock ? (stock.open || midOpen) : midOpen;
+          const c = isLast && stock ? stock.price : midClose;
+          const noise = Math.abs(o - c) * 0.5 + basePrice * volatility * 0.5;
+          const h = isLast && stock ? Math.max(stock.high || (Math.max(o, c) + noise), stock.price) : Math.max(o, c) + Math.random() * noise;
+          const l = isLast && stock ? Math.min(stock.low || (Math.min(o, c) - noise), stock.price) : Math.min(o, c) - Math.random() * noise;
+          const vol = isLast && stock ? (stock.volume || Math.floor(Math.random() * 100000 + 50000)) : Math.floor(Math.random() * 100000 + 20000);
           res.push({
-            time: tLabel,
-            open: isLast && stock ? (stock.open || o) : o,
-            high: isLast && stock ? Math.max(stock.high || h, stock.price) : h,
-            low: isLast && stock ? Math.min(stock.low || l, stock.price) : l,
-            close: c,
-            volume: vol
+            time: label(i),
+            open: Math.round(Math.max(1, o) * 100) / 100,
+            high: Math.round(Math.max(o, c, h, 1) * 100) / 100,
+            low: Math.round(Math.max(1, Math.min(o, c, l)) * 100) / 100,
+            close: Math.round(Math.max(1, c) * 100) / 100,
+            volume: Math.max(1000, vol)
           });
-          curr = c;
         }
         return res;
       };
