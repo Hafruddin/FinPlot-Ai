@@ -33,7 +33,8 @@ from backend.schemas import (
     HealthCheckRequest, PaperTradeRequest, PaperHoldingResponse, CopilotQueryRequest,
     FinancialFreedomCalculateRequest, FinancialFreedomPlanSaveRequest,
     TutorChatRequest, TutorChatResponse, RAGQueryRequest, RAGQueryResponse,
-    AgentRunRequest, AgentRunResponse, FinancialIQSubmitRequest, WhatIfRequest, WhatIfResponse
+    AgentRunRequest, AgentRunResponse, FinancialIQSubmitRequest, WhatIfRequest, WhatIfResponse,
+    DailyQuizAnswerRequest, SimulationStartRequest, SimulationOrderRequest
 )
 from backend.services.financial_freedom_service import (
     calculate_cashflow,
@@ -49,6 +50,9 @@ from backend.services.tutor_service import ai_tutor
 from backend.services.agent_orchestrator import agent_orchestrator
 from backend.services.portfolio_guardian_service import portfolio_guardian
 from backend.services.financial_iq_service import financial_iq_service
+from backend.services.gamification_service import GamificationService
+from backend.services.simulation_engine import SimulationEngine
+from backend.services.decision_quality_service import DecisionQualityService
 from backend.services.market.market_service import market_service
 from backend.api.market_routes import router as market_router
 
@@ -1132,9 +1136,96 @@ def get_iq_questions():
 
 @app.post("/api/iq/evaluate")
 def evaluate_iq_quiz(req: FinancialIQSubmitRequest, current_user: Optional[User] = Depends(get_optional_user), db: Session = Depends(get_db)):
-    """Evaluates answers, updates 6-pillar IQ scores, and returns strengths & recommended learning."""
-    uid = current_user.id if current_user else None
+    """Evaluates answers, updates 10-dimension IQ scores, logs to immutable ledger, and returns feedback."""
+    uid = current_user.id if current_user else 1
     return financial_iq_service.evaluate_answers(req.answers, user_id=uid, db=db)
+
+
+@app.get("/api/iq/profile")
+def get_user_iq_profile(current_user: Optional[User] = Depends(get_optional_user), db: Session = Depends(get_db)):
+    """Returns user's 10-dimension financial IQ profile, 1000-point scale, and audit activity ledger."""
+    uid = current_user.id if current_user else 1
+    return financial_iq_service.get_user_iq_profile(uid, db)
+
+
+@app.get("/api/iq/portfolio-behavior")
+def audit_portfolio_behavior(current_user: Optional[User] = Depends(get_optional_user), db: Session = Depends(get_db)):
+    """Evaluates real holdings for behavioral patterns (concentration risk, reserves) with zero trade execution."""
+    uid = current_user.id if current_user else 1
+    return financial_iq_service.audit_user_portfolio_behavior(uid, db)
+
+
+# --- GAMIFICATION & ENGAGEMENT SUBSYSTEM ---
+
+@app.get("/api/gamification/profile")
+def get_gamification_profile(current_user: Optional[User] = Depends(get_optional_user), db: Session = Depends(get_db)):
+    """Returns XP, Level, Title, Badges, Quests, and Daily Streak."""
+    uid = current_user.id if current_user else 1
+    return GamificationService.get_profile(uid, db)
+
+
+@app.get("/api/gamification/daily-quiz")
+def get_gamification_daily_quiz(current_user: Optional[User] = Depends(get_optional_user), db: Session = Depends(get_db)):
+    """Returns today's daily market intelligence challenge."""
+    uid = current_user.id if current_user else 1
+    return GamificationService.get_daily_quiz(uid, db)
+
+
+@app.post("/api/gamification/daily-quiz/answer")
+def answer_gamification_daily_quiz(req: DailyQuizAnswerRequest, current_user: Optional[User] = Depends(get_optional_user), db: Session = Depends(get_db)):
+    """Submits answer to today's quiz, updates streak and awards XP."""
+    uid = current_user.id if current_user else 1
+    return GamificationService.answer_daily_quiz(uid, req.quiz_id, req.selected_index, db)
+
+
+@app.post("/api/gamification/badges/unlock")
+def unlock_badge_manual(badge_id: str = Query(...), current_user: Optional[User] = Depends(get_optional_user), db: Session = Depends(get_db)):
+    """Unlocks a badge and awards XP reward."""
+    uid = current_user.id if current_user else 1
+    res = GamificationService.unlock_badge(uid, badge_id, db)
+    return res or {"unlocked": False, "message": "Badge already unlocked or invalid"}
+
+
+# --- HISTORICAL SIMULATION STUDIO (ANTI-FUTURE-LEAKAGE) ---
+
+@app.get("/api/simulation/scenarios")
+def get_simulation_scenarios():
+    """Returns catalog of historical crisis scenarios without leaking future price paths."""
+    return SimulationEngine.get_available_scenarios()
+
+
+@app.post("/api/simulation/session/start")
+def start_simulation_session(req: SimulationStartRequest, current_user: Optional[User] = Depends(get_optional_user), db: Session = Depends(get_db)):
+    """Starts a server-authoritative simulation session initialized at Step 0."""
+    uid = current_user.id if current_user else 1
+    return SimulationEngine.start_session(uid, req.scenario_id, db)
+
+
+@app.get("/api/simulation/session/{session_id}")
+def get_simulation_session(session_id: str, db: Session = Depends(get_db)):
+    """Returns session state with strict anti-future-leakage protection (reveals data only up to current step)."""
+    return SimulationEngine.get_session_state(session_id, db)
+
+
+@app.post("/api/simulation/session/{session_id}/order")
+def execute_simulation_order(session_id: str, req: SimulationOrderRequest, current_user: Optional[User] = Depends(get_optional_user), db: Session = Depends(get_db)):
+    """Executes a virtual trade order, runs Decision Quality scoring, and logs discipline impact."""
+    uid = current_user.id if current_user else 1
+    return SimulationEngine.execute_order(
+        session_id=session_id,
+        action=req.action,
+        quantity=req.quantity,
+        reasoning=req.reasoning or "",
+        user_id=uid,
+        db=db
+    )
+
+
+@app.post("/api/simulation/session/{session_id}/advance")
+def advance_simulation_step(session_id: str, db: Session = Depends(get_db)):
+    """Advances historical timeline by 1 step, revealing the next historical candle and events."""
+    return SimulationEngine.advance_step(session_id, db)
+
 
 
 # --- PORTFOLIO GUARDIAN ALLOCATION ANALYSIS ---

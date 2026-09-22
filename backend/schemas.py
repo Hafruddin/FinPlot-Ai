@@ -335,4 +335,21 @@ class WhatIfResponse(BaseModel):
     educational_takeaway: str
 
 
+# Gamification & Simulation Schemas
+class DailyQuizAnswerRequest(BaseModel):
+    quiz_id: str
+    selected_index: int
+
+
+class SimulationStartRequest(BaseModel):
+    scenario_id: str
+
+
+class SimulationOrderRequest(BaseModel):
+    action: str # BUY, SELL, HOLD, WAIT
+    quantity: float = 0.0
+    reasoning: Optional[str] = ""
+
+
+
 

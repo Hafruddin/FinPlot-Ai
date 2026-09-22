@@ -233,3 +233,207 @@ class KnowledgeDocument(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
 
+# ==============================================================================
+# GAMIFICATION, 10-DIMENSION FINANCIAL IQ & SIMULATION MODELS
+# ==============================================================================
+
+class IQActivityLedger(Base):
+    """Immutable audit trail for all changes to user Financial IQ."""
+    __tablename__ = "iq_activity_ledger"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
+    dimension = Column(String, nullable=False) # budgeting, saving, debt_mgmt, investing_basics, risk_understanding, asset_allocation, market_cycles, decision_discipline, diversification, long_term_planning
+    delta = Column(Float, nullable=False) # +1.5, -0.5
+    old_score = Column(Float, nullable=False)
+    new_score = Column(Float, nullable=False)
+    reason = Column(String, nullable=False) # e.g. "Completed Emergency Fund Quiz", "Decision Quality Score on Covid Crash"
+    evidence_json = Column(String, nullable=True) # JSON summary of underlying data/metrics
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+
+class UserFinancialIQ(Base):
+    """Current 10-dimension financial intelligence profile."""
+    __tablename__ = "user_financial_iq_profiles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), unique=True, index=True, nullable=False)
+    total_score = Column(Float, default=65.0) # 0 to 100
+    budgeting = Column(Float, default=6.5) # out of 10
+    saving = Column(Float, default=7.0) # out of 10
+    debt_mgmt = Column(Float, default=7.5) # out of 10
+    investing_basics = Column(Float, default=6.0) # out of 10
+    risk_understanding = Column(Float, default=6.5) # out of 10
+    asset_allocation = Column(Float, default=6.0) # out of 10
+    market_cycles = Column(Float, default=5.5) # out of 10
+    decision_discipline = Column(Float, default=6.0) # out of 10
+    diversification = Column(Float, default=6.5) # out of 10
+    long_term_planning = Column(Float, default=6.5) # out of 10
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
+
+class GameXP(Base):
+    """Engagement gamification layer: XP, levels, and learning streaks."""
+    __tablename__ = "game_xp"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), unique=True, index=True, nullable=False)
+    total_xp = Column(Integer, default=150)
+    level = Column(Integer, default=1)
+    title = Column(String, default="Financial Novice")
+    streak_days = Column(Integer, default=1)
+    last_active_date = Column(String, default=datetime.date.today().isoformat())
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
+
+class Badge(Base):
+    """Catalog of collectible achievements and milestones."""
+    __tablename__ = "badges"
+
+    id = Column(String, primary_key=True, index=True) # e.g. "first_assessment", "emergency_master"
+    name = Column(String, nullable=False)
+    description = Column(String, nullable=False)
+    icon = Column(String, default="🏆")
+    category = Column(String, default="Mastery") # Milestone, Discipline, Mastery, Risk
+    xp_reward = Column(Integer, default=100)
+
+
+class UserBadge(Base):
+    """User-unlocked badges."""
+    __tablename__ = "user_badges"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
+    badge_id = Column(String, ForeignKey("badges.id"), nullable=False)
+    unlocked_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+
+class LearningQuest(Base):
+    """Structured quests and missions that guide user learning."""
+    __tablename__ = "learning_quests"
+
+    id = Column(String, primary_key=True, index=True)
+    title = Column(String, nullable=False)
+    description = Column(String, nullable=False)
+    category = Column(String, default="Daily") # Daily, Weekly, Milestone
+    xp_reward = Column(Integer, default=75)
+    target_count = Column(Integer, default=1)
+
+
+class QuestProgress(Base):
+    """Progress for user active quests."""
+    __tablename__ = "quest_progress"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
+    quest_id = Column(String, ForeignKey("learning_quests.id"), nullable=False)
+    current_count = Column(Integer, default=0)
+    is_completed = Column(Integer, default=0)
+    completed_at = Column(DateTime, nullable=True)
+
+
+class DailyQuiz(Base):
+    """Daily market and financial discipline question."""
+    __tablename__ = "daily_quizzes"
+
+    id = Column(String, primary_key=True, index=True) # e.g. "dq_2026_09_22"
+    date_str = Column(String, index=True, nullable=False) # YYYY-MM-DD
+    question = Column(String, nullable=False)
+    options_json = Column(String, nullable=False) # JSON array of 4 options
+    correct_index = Column(Integer, nullable=False)
+    explanation = Column(String, nullable=False)
+    dimension = Column(String, default="market_cycles")
+    xp_reward = Column(Integer, default=50)
+
+
+class DailyQuizAttempt(Base):
+    """Record of user daily quiz attempts."""
+    __tablename__ = "daily_quiz_attempts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
+    quiz_id = Column(String, ForeignKey("daily_quizzes.id"), nullable=False)
+    selected_index = Column(Integer, nullable=False)
+    is_correct = Column(Integer, default=0)
+    answered_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+
+class SimulationSession(Base):
+    """
+    Historical Market Simulation Session.
+    Strict Server-Authoritative Timeline with Anti-Future-Leakage Protection.
+    """
+    __tablename__ = "simulation_sessions"
+
+    id = Column(String, primary_key=True, index=True) # UUID string
+    user_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
+    scenario_id = Column(String, nullable=False) # covid_shock_2020, tech_bull_2021, gfc_2008
+    symbol = Column(String, nullable=False)
+    current_step_index = Column(Integer, default=0)
+    total_steps = Column(Integer, default=20)
+    start_date = Column(String, nullable=False)
+    end_date = Column(String, nullable=False)
+    current_date = Column(String, nullable=False)
+    initial_cash = Column(Float, default=100000.0)
+    cash_balance = Column(Float, default=100000.0)
+    status = Column(String, default="ACTIVE") # ACTIVE, COMPLETED, ABANDONED
+    realized_pnl = Column(Float, default=0.0)
+    unrealized_pnl = Column(Float, default=0.0)
+    decision_score_avg = Column(Float, default=0.0)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
+
+class SimulationOrder(Base):
+    """Historical trade orders placed inside a simulation session."""
+    __tablename__ = "simulation_orders"
+
+    id = Column(Integer, primary_key=True, index=True)
+    session_id = Column(String, ForeignKey("simulation_sessions.id"), index=True, nullable=False)
+    step_index = Column(Integer, nullable=False)
+    date = Column(String, nullable=False)
+    action = Column(String, nullable=False) # BUY, SELL, HOLD, WAIT
+    quantity = Column(Float, default=0.0)
+    price = Column(Float, nullable=False)
+    reasoning = Column(String, nullable=True) # User-provided rationale
+    decision_score = Column(Float, default=50.0) # 0 to 100
+    decision_feedback = Column(String, nullable=True) # Breakdown of alignment & sizing
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+
+class SimulationPosition(Base):
+    """Current open positions held inside a simulation session."""
+    __tablename__ = "simulation_positions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    session_id = Column(String, ForeignKey("simulation_sessions.id"), index=True, nullable=False)
+    symbol = Column(String, nullable=False)
+    quantity = Column(Float, default=0.0)
+    avg_price = Column(Float, default=0.0)
+
+
+class CompanyEvent(Base):
+    """Historical timeline news & events revealed strictly on or after date."""
+    __tablename__ = "company_events"
+
+    id = Column(Integer, primary_key=True, index=True)
+    scenario_id = Column(String, index=True, nullable=False)
+    symbol = Column(String, index=True, nullable=False)
+    date = Column(String, index=True, nullable=False) # YYYY-MM-DD
+    headline = Column(String, nullable=False)
+    content = Column(String, nullable=False)
+    event_type = Column(String, default="MACRO") # EARNINGS, MACRO, INDUSTRY, REGULATORY
+
+
+class CompanyRelationship(Base):
+    """Supply chain & ecosystem relationships for business model understanding."""
+    __tablename__ = "company_relationships"
+
+    id = Column(Integer, primary_key=True, index=True)
+    symbol = Column(String, index=True, nullable=False)
+    related_symbol = Column(String, nullable=False)
+    relationship_type = Column(String, nullable=False) # SUPPLIER, CUSTOMER, COMPETITOR, ECOSYSTEM
+    description = Column(String, nullable=False)
+
+
+
