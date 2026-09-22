@@ -75,6 +75,30 @@ HISTORICAL_SCENARIOS = {
             {"date": "2021-01-10", "headline": "Q3 Profit Surges 7% on Robust Cloud Transformation Demand", "content": "TCS reports multi-billion dollar total contract value as enterprises migrate to AWS and Azure."},
             {"date": "2021-08-30", "headline": "IT Sector Leads Nifty to Historic 17,000 Milestone", "content": "Unprecedented demand for Indian engineering talent drives record earnings projections."}
         ]
+    },
+    "maruti_auto_cycle_2026": {
+        "id": "maruti_auto_cycle_2026",
+        "title": "2026 Auto Cycle & EV Shift (Maruti Suzuki)",
+        "symbol": "MARUTI",
+        "company_name": "Maruti Suzuki India Ltd",
+        "description": "Navigate price action, volume swings, and capital reallocation using authentic market trade records.",
+        "difficulty": "Intermediate",
+        "market_theme": "Automotive Disruption & Price Action",
+        "initial_cash": 100000.0,
+        "timeline": [
+            {"date": "2026-08-22", "price": 150.0, "high": 150.0, "low": 150.0, "volume": 7000, "condition": "NORMAL"},
+            {"date": "2026-08-24", "price": 3.5, "high": 3.5, "low": 3.5, "volume": 10, "condition": "VOLATILE"},
+            {"date": "2026-08-26", "price": 2.0, "high": 2.0, "low": 2.0, "volume": 124, "condition": "PANIC_DOWNTURN"},
+            {"date": "2026-09-01", "price": 18.62, "high": 20.0, "low": 9.0, "volume": 1861, "condition": "VOLATILE"},
+            {"date": "2026-09-03", "price": 12.0, "high": 12.0, "low": 5.5, "volume": 250, "condition": "NORMAL"},
+            {"date": "2026-09-10", "price": 4.2, "high": 4.2, "low": 4.2, "volume": 12, "condition": "NORMAL"},
+            {"date": "2026-09-17", "price": 4.2, "high": 4.2, "low": 4.2, "volume": 10, "condition": "NORMAL"},
+            {"date": "2026-09-21", "price": 3.5, "high": 3.5, "low": 3.5, "volume": 427, "condition": "NORMAL"}
+        ],
+        "events": [
+            {"date": "2026-08-22", "headline": "Auto Sector Prepares for Festival Demand", "content": "Dealership inventories expand ahead of key festive quarter sales targets."},
+            {"date": "2026-09-01", "headline": "Hybrid & EV Powertrain Transition Accelerates", "content": "Clean mobility regulatory standards push OEMs towards accelerated hybrid product mix."}
+        ]
     }
 }
 

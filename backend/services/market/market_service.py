@@ -9,6 +9,7 @@ from .symbol_mapper import symbol_mapper, KNOWN_SYMBOLS
 from .market_cache import market_cache
 from .kite_service import kite_service
 from .alphavantage_service import alphavantage_service
+from .dataset_loader import dataset_loader
 
 logger = logging.getLogger("finpilot.market_service")
 
@@ -369,7 +370,13 @@ class MarketService:
             merged["source"] = "Alpha Vantage"
             return merged
 
-        # 3. Fallback to Baseline Verified Data
+        # 3. Check Authentic Market Datasets
+        if dataset_loader.has_symbol(sym):
+            ds_q = dataset_loader.get_quote(sym)
+            if ds_q:
+                return ds_q
+
+        # 4. Fallback to Baseline Verified Data
         if sym in self._indices:
             data = dict(self._indices[sym])
             data["source"] = "FinPilot Gateway (Reference Benchmark)"
@@ -410,6 +417,15 @@ class MarketService:
         for sym, item in self._stocks.items():
             q = await self.get_quote(sym)
             stocks.append(q)
+        
+        # Include any loaded datasets not already tracked
+        existing_syms = {s.get("symbol") for s in stocks}
+        for ds_sym in dataset_loader.get_symbols():
+            if ds_sym not in existing_syms:
+                ds_q = dataset_loader.get_quote(ds_sym)
+                if ds_q:
+                    stocks.append(ds_q)
+
         return indices + stocks
 
     async def search_stocks(self, query: str) -> List[Dict[str, Any]]:
@@ -426,8 +442,14 @@ class MarketService:
         ]
 
     async def get_history(self, raw_symbol: str, timeframe: str = "1M") -> Dict[str, Any]:
-        """Fetch historical candle series from Kite, Alpha Vantage, or synthetic generator."""
+        """Fetch historical candle series from Authentic Datasets, Kite, Alpha Vantage, or synthetic generator."""
         sym = symbol_mapper.normalize(raw_symbol)
+
+        # 0. Check Authentic Market Datasets First
+        if dataset_loader.has_symbol(sym):
+            ds_hist = dataset_loader.get_history(sym, timeframe)
+            if ds_hist and len(ds_hist.get("candles", [])) > 0:
+                return ds_hist
 
         # 1. Try Kite
         kite_candles = await kite_service.get_historical(sym, interval="day")

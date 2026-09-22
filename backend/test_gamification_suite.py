@@ -212,6 +212,26 @@ class TestGamificationAndFinancialIQ(unittest.TestCase):
         self.assertIn("isolation_rule", audit)
         self.assertIn("never traded", audit["isolation_rule"])
 
+    def test_09_authentic_csv_dataset_loader(self):
+        """Tests that user-provided authentic CSV market datasets load correctly."""
+        from backend.services.market.dataset_loader import dataset_loader
+        from backend.services.simulation_engine import SimulationEngine
+
+        symbols = dataset_loader.get_symbols()
+        self.assertIn("MARUTI", symbols)
+        self.assertIn("SBIN", symbols)
+        self.assertIn("HDFCBANK", symbols)
+        self.assertIn("RELIANCE", symbols)
+
+        maruti_h = dataset_loader.get_history("MARUTI")
+        self.assertIsNotNone(maruti_h)
+        self.assertGreater(len(maruti_h["candles"]), 0)
+
+        # Verify new scenario in catalog
+        scenarios = SimulationEngine.get_available_scenarios()
+        s_ids = [s["id"] for s in scenarios]
+        self.assertIn("maruti_auto_cycle_2026", s_ids)
+
 
 if __name__ == "__main__":
     unittest.main()
