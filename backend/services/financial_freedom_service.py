@@ -282,6 +282,71 @@ def calculate_financial_freedom(
     }
 
 
+def solve_reverse_sip(
+    target_amount: float,
+    horizon_years: int,
+    annual_return: float = 0.12,
+    current_savings: float = 0.0,
+    monthly_investment_capacity: float = 0.0
+) -> Dict[str, Any]:
+    """
+    Authoritative deterministic Reverse SIP solver.
+    Computes exact monthly contribution needed to reach target_amount in horizon_years,
+    accounting for compounding on initial savings.
+    Handles edge cases: zero return, target already achieved, zero horizon.
+    """
+    target = max(0.0, float(target_amount))
+    years = max(1, int(horizon_years))
+    ret = float(annual_return)
+    if ret > 1.0:
+        ret = ret / 100.0
+    r = max(0.0, min(0.50, ret))
+    savings = max(0.0, float(current_savings))
+    capacity = max(0.0, float(monthly_investment_capacity))
+
+    total_months = years * 12
+    r_month = r / 12.0
+
+    # 1. Compounding of initial savings
+    savings_fv = savings * math.pow(1.0 + r, years)
+    net_needed = max(0.0, target - savings_fv)
+
+    # 2. Reverse Annuity Calculation
+    if net_needed <= 0.0:
+        required_sip = 0
+        status = "TARGET_ALREADY_ACHIEVED"
+    elif r_month <= 0.0:
+        # Zero return case: simple linear division
+        required_sip = math.ceil(net_needed / total_months)
+        status = "ZERO_RETURN_LINEAR"
+    else:
+        # Future value of annuity formula: FV = P * [((1+r)^n - 1)/r] * (1+r)
+        denom = ((math.pow(1.0 + r_month, total_months) - 1.0) / r_month) * (1.0 + r_month)
+        required_sip = math.ceil(net_needed / denom) if denom > 0 else 0
+        status = "OK"
+
+    total_contributed = round(savings + (required_sip * total_months))
+    growth_gain = max(0, round(target - total_contributed)) if required_sip > 0 else max(0, round(savings_fv - savings))
+    future_value = round(savings_fv + (required_sip * denom if (r_month > 0 and required_sip > 0) else required_sip * total_months))
+
+    return {
+        "target_amount": round(target),
+        "horizon_years": years,
+        "annual_return_pct": round(r * 100, 2),
+        "initial_savings": round(savings),
+        "initial_savings_fv": round(savings_fv),
+        "net_needed_from_sip": round(net_needed),
+        "required_monthly_sip": required_sip,
+        "total_contributed": total_contributed,
+        "growth_gain": growth_gain,
+        "future_value_achieved": future_value,
+        "monthly_capacity": round(capacity),
+        "is_capacity_sufficient": capacity >= required_sip if required_sip > 0 else True,
+        "capacity_deficit": max(0, round(required_sip - capacity)),
+        "status": status
+    }
+
+
 def calculate_years_to_freedom(
     current_corpus: float,
     monthly_sip: float,

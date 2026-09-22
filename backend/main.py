@@ -3,7 +3,7 @@ import os
 import math
 import random
 import json
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 
 # Load environment variables from .env if present
 _env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env")
@@ -20,14 +20,20 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from backend.database import engine, get_db
-from backend.models import Base, User, LessonCompletion, UserGoal, AssetHolding, PaperHolding, FinancialFreedomPlan
-from backend.auth import get_password_hash, verify_password, create_access_token, get_current_user
+from backend.models import (
+    Base, User, LessonCompletion, UserGoal, AssetHolding, PaperHolding, FinancialFreedomPlan,
+    UserProfile, Lesson, Quiz, QuizAttempt, FinancialIQRecord, SimulationRecord, AgentRun,
+    TutorConversation, KnowledgeDocument
+)
+from backend.auth import get_password_hash, verify_password, create_access_token, get_current_user, get_optional_user
 from backend.schemas import (
     UserRegister, UserLogin, Token, UserResponse,
     LessonCompletionRequest, LessonCompletionResponse,
     GoalSaveRequest, GoalResponse, RebalanceRequest, RebalanceResponse, AssetHoldingResponse,
     HealthCheckRequest, PaperTradeRequest, PaperHoldingResponse, CopilotQueryRequest,
-    FinancialFreedomCalculateRequest, FinancialFreedomPlanSaveRequest
+    FinancialFreedomCalculateRequest, FinancialFreedomPlanSaveRequest,
+    TutorChatRequest, TutorChatResponse, RAGQueryRequest, RAGQueryResponse,
+    AgentRunRequest, AgentRunResponse, FinancialIQSubmitRequest, WhatIfRequest, WhatIfResponse
 )
 from backend.services.financial_freedom_service import (
     calculate_cashflow,
@@ -35,8 +41,14 @@ from backend.services.financial_freedom_service import (
     calculate_financial_freedom,
     calculate_years_to_freedom,
     calculate_scenarios,
-    calculate_readiness_score
+    calculate_readiness_score,
+    solve_reverse_sip
 )
+from backend.services.rag_service import rag_service
+from backend.services.tutor_service import ai_tutor
+from backend.services.agent_orchestrator import agent_orchestrator
+from backend.services.portfolio_guardian_service import portfolio_guardian
+from backend.services.financial_iq_service import financial_iq_service
 from backend.services.market.market_service import market_service
 from backend.api.market_routes import router as market_router
 
@@ -106,6 +118,7 @@ def login(credentials: UserLogin, db: Session = Depends(get_db)):
 
 # --- USER PROFILE & ACADEMY ---
 
+@app.get("/api/auth/me")
 @app.get("/api/user/profile")
 def get_profile(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     completions = db.query(LessonCompletion).filter(LessonCompletion.user_id == current_user.id).all()
@@ -240,8 +253,8 @@ def rebalance_portfolio(req: RebalanceRequest, current_user: User = Depends(get_
             detail="No portfolio holdings found. Please build a goal strategy first."
         )
 
-    # Shift 5% from direct stocks or index equity to Gold/Cash
-    reallocated_value = req.current_value * 1.012 # simulated 1.2% recovery
+    # Rebalance asset weights toward target equilibrium without artificial value inflation
+    reallocated_value = req.current_value  # Preserve exact portfolio value without fake recovery
     
     # Adjust weights and values
     for h in holdings:
@@ -268,7 +281,7 @@ def rebalance_portfolio(req: RebalanceRequest, current_user: User = Depends(get_
     return {
         "total_value": reallocated_value,
         "holdings": response_holdings,
-        "message": "AI Rebalancing successful. Adjusted tech holdings into debt and gold."
+        "message": "Portfolio weights realigned toward target allocation. Total capital preserved without artificial gains."
     }
 
 
@@ -959,42 +972,207 @@ def get_market_news(category: Optional[str] = None):
 
 # --- FINPILOT COPILOT CONTEXT-AWARE ASSISTANT ---
 
-@app.post("/api/copilot/chat")
-def copilot_chat(req: CopilotQueryRequest, current_user: User = Depends(get_current_user)):
-    msg = req.message.lower()
-    
-    if "sip" in msg or "lumpsum" in msg:
-        reply = (
-            "A **SIP (Systematic Investment Plan)** allows you to invest a fixed amount regularly (e.g., monthly), "
-            "benefiting from rupee cost averaging and compounding. A **Lumpsum** is a one-time single investment. "
-            "For beginners, SIP reduces the risk of market timing!"
-        )
-    elif "risk" in msg or "diversif" in msg:
-        reply = (
-            "Diversification means not putting all your eggs in one basket. Splitting capital across Equity (growth), "
-            "Debt (stability), and Gold (inflation hedge) protects your total portfolio when one market dips."
-        )
-    elif "stock" in msg or "share" in msg:
-        reply = (
-            "A stock represents partial ownership in a business. Before buying any stock, understand how the company "
-            "makes money, its growth drivers, and its major risks—never buy based solely on price momentum."
-        )
-    elif "goal" in msg or "plan" in msg:
-        target = current_user.goals.target_amount if current_user.goals else 5000000
-        reply = f"Your current target goal is ₹{target:,.0f}. To stay on track, maintain consistent monthly contributions and review your asset allocation annually."
-    elif "pe" in msg or "ratio" in msg or "valuation" in msg:
-        reply = (
-            "The **P/E (Price-to-Earnings) Ratio** indicates how much investors are willing to pay for every ₹1 of profit "
-            "the company makes. A lower P/E may suggest a stock is reasonably priced or undervalued, while a high P/E "
-            "often reflects high future growth expectations."
-        )
-    else:
-        reply = (
-            f"Hello {current_user.name}! I'm Arya, your FinPilot Wealth Mentor. I'm here to help you learn financial concepts, "
-            f"understand portfolio risks, and build healthy investment habits. What concept would you like to explore?"
-        )
+# --- AI FINANCIAL TUTOR & COPILOT (REAL AI + RAG) ---
 
-    return {"reply": reply, "financial_iq": current_user.financial_iq}
+@app.post("/api/copilot/chat")
+async def copilot_chat(req: CopilotQueryRequest, current_user: Optional[User] = Depends(get_optional_user), db: Session = Depends(get_db)):
+    """AI Financial Mentor & Copilot grounded in RAG evidence (replaces legacy rule-based bot)."""
+    profile_dict = {
+        "name": current_user.name if current_user else "Investor",
+        "financial_iq": current_user.financial_iq if current_user else 650,
+        "age": 21,
+        "risk_tolerance": "moderate"
+    }
+    tutor_res = await ai_tutor.ask(req.message, profile_dict)
+    
+    # Store conversation if user logged in
+    if current_user:
+        try:
+            conv = TutorConversation(
+                user_id=current_user.id,
+                role="user",
+                content=req.message,
+                intent=tutor_res.get("intent")
+            )
+            reply_conv = TutorConversation(
+                user_id=current_user.id,
+                role="assistant",
+                content=tutor_res.get("answer", ""),
+                intent=tutor_res.get("intent"),
+                citations_json=json.dumps(tutor_res.get("citations", []))
+            )
+            db.add(conv)
+            db.add(reply_conv)
+            db.commit()
+        except Exception:
+            pass
+
+    return {
+        "reply": tutor_res["answer"],
+        "intent": tutor_res["intent"],
+        "summary": tutor_res["summary"],
+        "key_takeaways": tutor_res["key_takeaways"],
+        "example": tutor_res["example"],
+        "citations": tutor_res["citations"],
+        "limitations": tutor_res["limitations"],
+        "provider": tutor_res["provider"],
+        "financial_iq": current_user.financial_iq if current_user else 650
+    }
+
+
+@app.post("/api/tutor/chat", response_model=TutorChatResponse)
+async def tutor_chat(req: TutorChatRequest, current_user: Optional[User] = Depends(get_optional_user)):
+    """Dedicated endpoint for AI Financial Tutor with structured citations and explanations."""
+    profile_dict = req.context or {
+        "age": 21,
+        "risk_tolerance": "moderate",
+        "monthly_income": 30000.0
+    }
+    return await ai_tutor.ask(req.message, profile_dict)
+
+
+# --- RAG KNOWLEDGE BASE ENDPOINTS ---
+
+@app.post("/api/rag/query", response_model=RAGQueryResponse)
+def query_rag(req: RAGQueryRequest):
+    """Queries verified financial education literature across SEBI, RBI, AMFI, and NISM."""
+    docs = rag_service.search(req.query, top_k=req.top_k or 3, category=req.category)
+    return {
+        "query": req.query,
+        "count": len(docs),
+        "results": docs
+    }
+
+
+@app.get("/api/rag/documents")
+def list_rag_documents():
+    """Returns curated repository of verified financial education documents with authoritative citations."""
+    return rag_service._corpus
+
+
+# --- MULTI-AGENT ORCHESTRATION PIPELINE ---
+
+@app.post("/api/agents/run", response_model=AgentRunResponse)
+def run_agent_pipeline(req: AgentRunRequest, current_user: Optional[User] = Depends(get_optional_user)):
+    """
+    Executes the 7-agent planning pipeline:
+    ProfileAgent -> GoalAgent -> RiskAgent -> KnowledgeAgent -> SimulationAgent -> StrategyAgent -> ExplanationAgent.
+    """
+    user_id = current_user.id if current_user else None
+    return agent_orchestrator.run_pipeline(req.dict(), user_id=user_id)
+
+
+# --- INTERACTIVE WHAT-IF ENGINE ---
+
+@app.post("/api/simulation/whatif", response_model=WhatIfResponse)
+def calculate_what_if(req: WhatIfRequest):
+    """
+    Calculates impact of changing timeline, capacity, or assumptions.
+    Directly answers: 'What changed when horizon extended from 10 years to 15 years?'
+    """
+    # 1. Previous simulation
+    prev_sim = solve_reverse_sip(
+        target_amount=req.target_amount,
+        horizon_years=req.previous_horizon_years,
+        annual_return=req.annual_return,
+        current_savings=req.current_savings,
+        monthly_investment_capacity=req.monthly_capacity
+    )
+
+    # 2. New simulation
+    new_sim = solve_reverse_sip(
+        target_amount=req.target_amount,
+        horizon_years=req.new_horizon_years,
+        annual_return=req.annual_return,
+        current_savings=req.current_savings,
+        monthly_investment_capacity=req.monthly_capacity
+    )
+
+    sip_diff = prev_sim["required_monthly_sip"] - new_sim["required_monthly_sip"]
+    reduction_pct = round((sip_diff / prev_sim["required_monthly_sip"] * 100.0), 1) if prev_sim["required_monthly_sip"] > 0 else 0.0
+
+    explanation = (
+        f"By extending your investment duration from {req.previous_horizon_years} to {req.new_horizon_years} years (+{req.new_horizon_years - req.previous_horizon_years} years), "
+        f"your required monthly SIP drops from ₹{prev_sim['required_monthly_sip']:,}/month to ₹{new_sim['required_monthly_sip']:,}/month—a savings of "
+        f"₹{sip_diff:,}/month ({reduction_pct}% reduction). "
+        f"Compound interest has {req.new_horizon_years} years to compound, generating ₹{new_sim['growth_gain']:,} in growth "
+        f"(vs ₹{prev_sim['growth_gain']:,} previously), so your out-of-pocket savings burden is dramatically reduced!"
+    )
+
+    takeaway = (
+        "Time is the greatest multiplier in personal wealth. Extending your horizon lets compound interest do the heavy lifting "
+        "rather than straining your current monthly budget."
+    )
+
+    return {
+        "target_amount": req.target_amount,
+        "current_savings": req.current_savings,
+        "previous_horizon": req.previous_horizon_years,
+        "new_horizon": req.new_horizon_years,
+        "previous_required_sip": prev_sim["required_monthly_sip"],
+        "new_required_sip": new_sim["required_monthly_sip"],
+        "sip_difference": sip_diff,
+        "sip_reduction_pct": reduction_pct,
+        "previous_total_contributed": prev_sim["total_contributed"],
+        "new_total_contributed": new_sim["total_contributed"],
+        "previous_growth_gain": prev_sim["growth_gain"],
+        "new_growth_gain": new_sim["growth_gain"],
+        "what_changed_explanation": explanation,
+        "educational_takeaway": takeaway
+    }
+
+
+# --- FINANCIAL IQ REBUILT (0-100 MULTIDIMENSIONAL SCORE) ---
+
+@app.get("/api/iq/questions")
+def get_iq_questions():
+    """Returns assessment questions across the 6 core financial competency dimensions."""
+    return financial_iq_service.get_assessment_questions()
+
+
+@app.post("/api/iq/evaluate")
+def evaluate_iq_quiz(req: FinancialIQSubmitRequest, current_user: Optional[User] = Depends(get_optional_user), db: Session = Depends(get_db)):
+    """Evaluates answers, updates 6-pillar IQ scores, and returns strengths & recommended learning."""
+    uid = current_user.id if current_user else None
+    return financial_iq_service.evaluate_answers(req.answers, user_id=uid, db=db)
+
+
+# --- PORTFOLIO GUARDIAN ALLOCATION ANALYSIS ---
+
+@app.post("/api/portfolio/analyze")
+def analyze_portfolio_allocation(holdings: List[Dict[str, Any]], risk_profile: str = Query("moderate")):
+    """Analyzes current holdings against target asset allocation without artificial performance claims."""
+    return portfolio_guardian.analyze_portfolio(holdings, risk_profile=risk_profile)
+
+
+@app.get("/api/portfolio/guardian")
+def get_user_portfolio_guardian(
+    portfolio_value: Optional[float] = 300000.0,
+    current_equity: Optional[float] = 237000.0,
+    current_debt: Optional[float] = 45000.0,
+    current_cash: Optional[float] = 18000.0,
+    risk_tolerance: Optional[str] = "moderate",
+    current_user: Optional[User] = Depends(get_optional_user),
+    db: Session = Depends(get_db)
+):
+    """Analyzes user's or simulated portfolio holdings for allocation drift and concentration risk."""
+    if current_user:
+        db_holdings = db.query(AssetHolding).filter(AssetHolding.user_id == current_user.id).all()
+        if db_holdings:
+            holdings_list = [{"asset_class": h.asset_class, "current_value": h.current_value, "weight": h.weight} for h in db_holdings]
+            risk_level = current_user.goals.risk_appetite if current_user.goals else "moderate"
+            return portfolio_guardian.analyze_portfolio(holdings_list, risk_profile=risk_level)
+
+    from backend.services.portfolio_guardian_service import analyze_portfolio_drift
+    rep = analyze_portfolio_drift(
+        portfolio_value=portfolio_value or 300000.0,
+        current_equity=current_equity if current_equity is not None else 237000.0,
+        current_debt=current_debt if current_debt is not None else 45000.0,
+        current_cash=current_cash if current_cash is not None else 18000.0,
+        risk_tolerance=risk_tolerance or "moderate"
+    )
+    rep["guardian_insights"] = rep.get("concentration_warnings", [])
+    return rep
 
 
 @app.get("/api/funds")

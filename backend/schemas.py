@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 import datetime
 
 # User Schemas
@@ -220,5 +220,119 @@ class MarketHealthResponse(BaseModel):
     status: str
     timestamp: float
     services: dict
+
+
+# --- Agentic AI & Tutor Schemas ---
+class TutorChatRequest(BaseModel):
+    message: str
+    context: Optional[dict] = None
+
+
+class CitationItem(BaseModel):
+    title: str
+    source: str
+    url: Optional[str] = None
+    section: Optional[str] = None
+
+
+class TutorChatResponse(BaseModel):
+    intent: str
+    answer: str
+    summary: str
+    key_takeaways: List[str]
+    example: str
+    citations: List[CitationItem]
+    limitations: str
+    provider: str
+
+
+class RAGQueryRequest(BaseModel):
+    query: str
+    top_k: Optional[int] = 3
+    category: Optional[str] = None
+
+
+class RAGDocumentItem(BaseModel):
+    doc_id: str
+    title: str
+    category: str
+    source: str
+    url: Optional[str] = None
+    section: Optional[str] = None
+    content: str
+    score: float
+
+
+class RAGQueryResponse(BaseModel):
+    query: str
+    count: int
+    results: List[RAGDocumentItem]
+
+
+class AgentRunRequest(BaseModel):
+    age: Optional[int] = 21
+    monthly_income: Optional[float] = 30000.0
+    monthly_expenses: Optional[float] = 20000.0
+    current_savings: Optional[float] = 50000.0
+    monthly_capacity: Optional[float] = 5000.0
+    target_amount: Optional[float] = 5000000.0
+    duration_years: Optional[int] = 10
+    risk_tolerance: Optional[str] = "moderate"
+    goal_type: Optional[str] = "Wealth Accumulation & Freedom"
+    inflation_rate: Optional[float] = 0.06
+
+
+class AgentTraceStep(BaseModel):
+    run_id: str
+    agent_name: str
+    responsibility: str
+    status: str
+    started_at: str
+    completed_at: str
+    duration_ms: float
+    input_summary: str
+    output_summary: str
+    evidence: Optional[Any] = None
+    error: Optional[str] = None
+
+
+class AgentRunResponse(BaseModel):
+    run_id: str
+    status: str
+    executed_agents_count: int
+    trace: List[AgentTraceStep]
+    results: dict
+
+
+class FinancialIQSubmitRequest(BaseModel):
+    answers: Dict[str, Any]
+
+
+class WhatIfRequest(BaseModel):
+    previous_horizon_years: int = 10
+    new_horizon_years: int = 15
+    target_amount: float = 5000000.0
+    current_savings: float = 50000.0
+    monthly_capacity: float = 5000.0
+    annual_return: float = 0.12
+    inflation_rate: float = 0.06
+
+
+class WhatIfResponse(BaseModel):
+    target_amount: float
+    current_savings: float
+    previous_horizon: int
+    new_horizon: int
+    previous_required_sip: int
+    new_required_sip: int
+    sip_difference: int
+    sip_reduction_pct: float
+    previous_total_contributed: int
+    new_total_contributed: int
+    previous_growth_gain: int
+    new_growth_gain: int
+    what_changed_explanation: str
+    educational_takeaway: str
+
 
 
