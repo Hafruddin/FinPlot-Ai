@@ -12,8 +12,8 @@
   <script>window.React || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"><\/script>')</script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script>window.ReactDOM || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"><\/script>')</script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script>window.Babel || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.10/babel.min.js"><\/script>')</script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
+  <script>window.Babel || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.10/babel.min.js" crossorigin><\/script>')</script>
   <style>
     /* ==========================================================================
        FINPILOT AI FINTECH DESIGN SYSTEM — LIGHT & DARK THEMES
@@ -1005,7 +1005,8 @@
       var ldr = document.getElementById('startup-loader');
       if (errDiv) {
         errDiv.style.display = 'block';
-        errDiv.innerHTML = '<strong>⚠️ FinPilot Workspace Error:</strong><br/>' + msg + '<br/><small>At ' + url + ':' + line + ':' + col + '</small>';
+        var details = err && err.stack ? err.stack : (msg + ' at ' + (url || 'inline') + ':' + line + ':' + col);
+        errDiv.innerHTML = '<strong>⚠️ FinPilot Workspace Error:</strong><pre style="margin-top:8px; white-space:pre-wrap; font-size:12px;">' + details + '</pre>';
       }
       if (ldr) ldr.style.display = 'none';
     };
@@ -5461,9 +5462,6 @@
                 </div>
               </div>
             )}
-          </div>
-        );
-      };
           </div>
         );
       };
