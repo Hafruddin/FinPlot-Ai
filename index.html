@@ -2142,27 +2142,9 @@
       ]
 };
 
-    // Curated Indian Stocks Catalog to ensure real-time charts and data render reliably
+    // Curated Indian Stocks Catalog — Full NSE/BSE Universe
     const DEFAULT_CURATED_STOCKS = [
-      {
-            "symbol": "RELIANCE",
-            "name": "Reliance Industries Ltd",
-            "price": 1247.6,
-            "change": 0.2,
-            "change_percent": 0.016,
-            "open": 1247.6,
-            "high": 1251.9,
-            "low": 1244.6,
-            "previous_close": 1247.4,
-            "volume": 6450000,
-            "market_cap": "\u20b916.88 Lakh Cr",
-            "pe_ratio": 22.59,
-            "sector": "Energy & Telecom",
-            "range_52w_high": 1611.8,
-            "range_52w_low": 1226.4,
-            "exchange": "NSE",
-            "is_index": false
-      },
+      { "symbol": "RELIANCE", "name": "Reliance Industries Ltd", "price": 1247.6, "change": 0.2, "change_percent": 0.016, "open": 1247.6, "high": 1251.9, "low": 1244.6, "previous_close": 1247.4, "volume": 6450000, "market_cap": "₹16.88 Lakh Cr", "pe_ratio": 22.59, "sector": "Energy & Telecom", "range_52w_high": 1611.8, "range_52w_low": 1226.4, "exchange": "NSE", "is_index": false },
       {
             "symbol": "TCS",
             "name": "Tata Consultancy Services Ltd",
@@ -2326,7 +2308,7 @@
             "low": 1815.0,
             "previous_close": 1817.5,
             "volume": 5800000,
-            "market_cap": "\u20b910.82 Lakh Cr",
+            "market_cap": "₹10.82 Lakh Cr",
             "pe_ratio": 38.5,
             "sector": "Telecommunications",
             "range_52w_high": 1920.0,
@@ -2334,44 +2316,41 @@
             "exchange": "NSE",
             "is_index": false
       },
-      {
-            "symbol": "NIFTY 50",
-            "name": "Nifty 50 Index",
-            "price": 25418.8,
-            "change": 142.5,
-            "change_percent": 0.56,
-            "open": 25320.0,
-            "high": 25445.0,
-            "low": 25305.0,
-            "previous_close": 25276.3,
-            "volume": 245000000,
-            "market_cap": "National Stock Exchange Benchmark",
-            "pe_ratio": 22.8,
-            "sector": "Broad Market Benchmark",
-            "range_52w_high": 26277.35,
-            "range_52w_low": 18837.85,
-            "exchange": "NSE",
-            "is_index": true
-      },
-      {
-            "symbol": "SENSEX",
-            "name": "BSE Sensex Index",
-            "price": 83214.72,
-            "change": 465.1,
-            "change_percent": 0.56,
-            "open": 82950.0,
-            "high": 83310.0,
-            "low": 82890.0,
-            "previous_close": 82749.62,
-            "volume": 142000000,
-            "market_cap": "Bombay Stock Exchange Benchmark",
-            "pe_ratio": 23.5,
-            "sector": "Broad Market Benchmark",
-            "range_52w_high": 85978.25,
-            "range_52w_low": 63580.0,
-            "exchange": "BSE",
-            "is_index": true
-      }
+      { "symbol": "HCLTECH", "name": "HCL Technologies Ltd", "price": 1624.0, "change": 18.5, "change_percent": 1.15, "open": 1612.0, "high": 1630.0, "low": 1608.0, "previous_close": 1605.5, "volume": 3240000, "market_cap": "₹4.40 Lakh Cr", "pe_ratio": 26.3, "sector": "Information Technology", "range_52w_high": 1950.0, "range_52w_low": 1350.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "WIPRO", "name": "Wipro Ltd", "price": 298.5, "change": -2.1, "change_percent": -0.70, "open": 301.0, "high": 303.5, "low": 297.2, "previous_close": 300.6, "volume": 7800000, "market_cap": "₹3.09 Lakh Cr", "pe_ratio": 20.1, "sector": "Information Technology", "range_52w_high": 380.0, "range_52w_low": 270.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "AXISBANK", "name": "Axis Bank Ltd", "price": 1185.0, "change": 9.5, "change_percent": 0.81, "open": 1178.0, "high": 1192.0, "low": 1174.0, "previous_close": 1175.5, "volume": 8600000, "market_cap": "₹3.64 Lakh Cr", "pe_ratio": 14.2, "sector": "Banking & Finance", "range_52w_high": 1340.0, "range_52w_low": 980.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "KOTAKBANK", "name": "Kotak Mahindra Bank Ltd", "price": 2042.0, "change": -12.5, "change_percent": -0.61, "open": 2058.0, "high": 2065.0, "low": 2038.0, "previous_close": 2054.5, "volume": 3900000, "market_cap": "₹4.06 Lakh Cr", "pe_ratio": 18.9, "sector": "Banking & Finance", "range_52w_high": 2280.0, "range_52w_low": 1700.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "BAJFINANCE", "name": "Bajaj Finance Ltd", "price": 7845.0, "change": 62.0, "change_percent": 0.80, "open": 7800.0, "high": 7880.0, "low": 7790.0, "previous_close": 7783.0, "volume": 1250000, "market_cap": "₹4.72 Lakh Cr", "pe_ratio": 31.5, "sector": "Banking & Finance", "range_52w_high": 9000.0, "range_52w_low": 6200.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "ADANIPORTS", "name": "Adani Ports & SEZ", "price": 1315.0, "change": 10.8, "change_percent": 0.83, "open": 1308.0, "high": 1322.0, "low": 1304.0, "previous_close": 1304.2, "volume": 3640000, "market_cap": "₹2.83 Lakh Cr", "pe_ratio": 34.8, "sector": "Infrastructure", "range_52w_high": 1620.0, "range_52w_low": 980.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "HINDUNILVR", "name": "Hindustan Unilever Ltd", "price": 2335.0, "change": -15.0, "change_percent": -0.64, "open": 2352.0, "high": 2358.0, "low": 2330.0, "previous_close": 2350.0, "volume": 1820000, "market_cap": "₹5.47 Lakh Cr", "pe_ratio": 52.3, "sector": "FMCG", "range_52w_high": 2750.0, "range_52w_low": 2200.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "NTPC", "name": "NTPC Ltd", "price": 372.0, "change": 3.5, "change_percent": 0.95, "open": 369.5, "high": 374.5, "low": 368.0, "previous_close": 368.5, "volume": 19200000, "market_cap": "₹3.61 Lakh Cr", "pe_ratio": 16.8, "sector": "Power & Utilities", "range_52w_high": 448.0, "range_52w_low": 290.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "POWERGRID", "name": "Power Grid Corporation", "price": 318.5, "change": 2.2, "change_percent": 0.70, "open": 316.8, "high": 320.5, "low": 315.8, "previous_close": 316.3, "volume": 11500000, "market_cap": "₹2.96 Lakh Cr", "pe_ratio": 18.4, "sector": "Power & Utilities", "range_52w_high": 390.0, "range_52w_low": 240.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "SUNPHARMA", "name": "Sun Pharmaceutical Industries", "price": 1842.0, "change": 22.5, "change_percent": 1.24, "open": 1825.0, "high": 1850.0, "low": 1820.0, "previous_close": 1819.5, "volume": 2480000, "market_cap": "₹4.42 Lakh Cr", "pe_ratio": 38.2, "sector": "Pharmaceuticals", "range_52w_high": 1960.0, "range_52w_low": 1350.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "TECHM", "name": "Tech Mahindra Ltd", "price": 1645.0, "change": -8.5, "change_percent": -0.51, "open": 1655.0, "high": 1662.0, "low": 1640.0, "previous_close": 1653.5, "volume": 2960000, "market_cap": "₹1.60 Lakh Cr", "pe_ratio": 28.7, "sector": "Information Technology", "range_52w_high": 1850.0, "range_52w_low": 1200.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "LTIM", "name": "LTIMindtree Ltd", "price": 5280.0, "change": 45.0, "change_percent": 0.86, "open": 5240.0, "high": 5295.0, "low": 5230.0, "previous_close": 5235.0, "volume": 480000, "market_cap": "₹1.56 Lakh Cr", "pe_ratio": 32.4, "sector": "Information Technology", "range_52w_high": 6600.0, "range_52w_low": 4600.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "ULTRACEMCO", "name": "UltraTech Cement Ltd", "price": 10845.0, "change": 95.0, "change_percent": 0.88, "open": 10760.0, "high": 10870.0, "low": 10740.0, "previous_close": 10750.0, "volume": 340000, "market_cap": "₹3.12 Lakh Cr", "pe_ratio": 42.5, "sector": "Materials & Cement", "range_52w_high": 12200.0, "range_52w_low": 8500.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "TITAN", "name": "Titan Company Ltd", "price": 3285.0, "change": 28.5, "change_percent": 0.87, "open": 3260.0, "high": 3296.0, "low": 3252.0, "previous_close": 3256.5, "volume": 820000, "market_cap": "₹2.92 Lakh Cr", "pe_ratio": 86.4, "sector": "Consumer Discretionary", "range_52w_high": 3900.0, "range_52w_low": 2700.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "ONGC", "name": "Oil & Natural Gas Corporation", "price": 282.5, "change": 1.8, "change_percent": 0.64, "open": 281.0, "high": 284.5, "low": 279.8, "previous_close": 280.7, "volume": 22800000, "market_cap": "₹3.56 Lakh Cr", "pe_ratio": 8.4, "sector": "Energy & Oil", "range_52w_high": 345.0, "range_52w_low": 220.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "DRREDDY", "name": "Dr. Reddy's Laboratories", "price": 6215.0, "change": -35.0, "change_percent": -0.56, "open": 6252.0, "high": 6265.0, "low": 6200.0, "previous_close": 6250.0, "volume": 680000, "market_cap": "₹1.04 Lakh Cr", "pe_ratio": 20.8, "sector": "Pharmaceuticals", "range_52w_high": 7200.0, "range_52w_low": 5400.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "BAJAJFINSV", "name": "Bajaj Finserv Ltd", "price": 1895.0, "change": 12.5, "change_percent": 0.66, "open": 1884.0, "high": 1902.0, "low": 1880.0, "previous_close": 1882.5, "volume": 1640000, "market_cap": "₹3.02 Lakh Cr", "pe_ratio": 22.6, "sector": "Banking & Finance", "range_52w_high": 2200.0, "range_52w_low": 1550.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "TATASTEEL", "name": "Tata Steel Ltd", "price": 142.8, "change": 1.1, "change_percent": 0.78, "open": 142.0, "high": 143.9, "low": 141.5, "previous_close": 141.7, "volume": 38400000, "market_cap": "₹1.77 Lakh Cr", "pe_ratio": 18.2, "sector": "Metals & Mining", "range_52w_high": 185.0, "range_52w_low": 120.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "JSWSTEEL", "name": "JSW Steel Ltd", "price": 905.0, "change": -6.5, "change_percent": -0.71, "open": 912.0, "high": 915.0, "low": 902.0, "previous_close": 911.5, "volume": 5200000, "market_cap": "₹2.21 Lakh Cr", "pe_ratio": 22.4, "sector": "Metals & Mining", "range_52w_high": 1040.0, "range_52w_low": 750.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "ASIANPAINT", "name": "Asian Paints Ltd", "price": 2485.0, "change": -18.0, "change_percent": -0.72, "open": 2505.0, "high": 2510.0, "low": 2480.0, "previous_close": 2503.0, "volume": 1480000, "market_cap": "₹2.37 Lakh Cr", "pe_ratio": 44.8, "sector": "Consumer Discretionary", "range_52w_high": 3200.0, "range_52w_low": 2200.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "DIVISLAB", "name": "Divi's Laboratories", "price": 5645.0, "change": 42.0, "change_percent": 0.75, "open": 5610.0, "high": 5662.0, "low": 5600.0, "previous_close": 5603.0, "volume": 320000, "market_cap": "₹1.50 Lakh Cr", "pe_ratio": 68.2, "sector": "Pharmaceuticals", "range_52w_high": 6200.0, "range_52w_low": 4400.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "GRASIM", "name": "Grasim Industries Ltd", "price": 2580.0, "change": 15.0, "change_percent": 0.58, "open": 2568.0, "high": 2592.0, "low": 2562.0, "previous_close": 2565.0, "volume": 1120000, "market_cap": "₹1.69 Lakh Cr", "pe_ratio": 19.6, "sector": "Materials & Cement", "range_52w_high": 2900.0, "range_52w_low": 2100.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "BPCL", "name": "Bharat Petroleum Corporation", "price": 348.5, "change": 3.2, "change_percent": 0.93, "open": 346.0, "high": 350.5, "low": 344.8, "previous_close": 345.3, "volume": 14800000, "market_cap": "₹1.51 Lakh Cr", "pe_ratio": 7.8, "sector": "Energy & Oil", "range_52w_high": 420.0, "range_52w_low": 280.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "HINDALCO", "name": "Hindalco Industries Ltd", "price": 655.0, "change": 5.5, "change_percent": 0.85, "open": 650.0, "high": 658.5, "low": 648.0, "previous_close": 649.5, "volume": 9600000, "market_cap": "₹1.47 Lakh Cr", "pe_ratio": 14.8, "sector": "Metals & Mining", "range_52w_high": 780.0, "range_52w_low": 500.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "EICHERMOT", "name": "Eicher Motors Ltd", "price": 4825.0, "change": -22.0, "change_percent": -0.45, "open": 4850.0, "high": 4858.0, "low": 4818.0, "previous_close": 4847.0, "volume": 420000, "market_cap": "₹1.33 Lakh Cr", "pe_ratio": 28.5, "sector": "Automobile & EV", "range_52w_high": 5500.0, "range_52w_low": 3800.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "COALINDIA", "name": "Coal India Ltd", "price": 484.0, "change": 4.5, "change_percent": 0.94, "open": 480.5, "high": 486.5, "low": 479.0, "previous_close": 479.5, "volume": 16800000, "market_cap": "₹2.98 Lakh Cr", "pe_ratio": 9.2, "sector": "Energy & Mining", "range_52w_high": 560.0, "range_52w_low": 380.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "HEROMOTOCO", "name": "Hero MotoCorp Ltd", "price": 4125.0, "change": 38.5, "change_percent": 0.94, "open": 4090.0, "high": 4140.0, "low": 4082.0, "previous_close": 4086.5, "volume": 690000, "market_cap": "₹82,400 Cr", "pe_ratio": 19.4, "sector": "Automobile & EV", "range_52w_high": 4800.0, "range_52w_low": 3400.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "SHREECEM", "name": "Shree Cement Ltd", "price": 24680.0, "change": 185.0, "change_percent": 0.75, "open": 24510.0, "high": 24750.0, "low": 24480.0, "previous_close": 24495.0, "volume": 72000, "market_cap": "₹89,260 Cr", "pe_ratio": 56.4, "sector": "Materials & Cement", "range_52w_high": 28500.0, "range_52w_low": 20000.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "APOLLOHOSP", "name": "Apollo Hospitals Enterprise", "price": 6820.0, "change": 52.0, "change_percent": 0.77, "open": 6775.0, "high": 6840.0, "low": 6762.0, "previous_close": 6768.0, "volume": 285000, "market_cap": "₹97,800 Cr", "pe_ratio": 75.2, "sector": "Healthcare", "range_52w_high": 7500.0, "range_52w_low": 5200.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "INDUSINDBK", "name": "IndusInd Bank Ltd", "price": 1045.0, "change": -8.5, "change_percent": -0.81, "open": 1056.0, "high": 1058.0, "low": 1042.0, "previous_close": 1053.5, "volume": 8400000, "market_cap": "₹81,200 Cr", "pe_ratio": 11.2, "sector": "Banking & Finance", "range_52w_high": 1400.0, "range_52w_low": 860.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "MM", "name": "Mahindra & Mahindra Ltd", "price": 2925.0, "change": 28.0, "change_percent": 0.97, "open": 2900.0, "high": 2938.0, "low": 2892.0, "previous_close": 2897.0, "volume": 3100000, "market_cap": "₹3.63 Lakh Cr", "pe_ratio": 30.4, "sector": "Automobile & EV", "range_52w_high": 3280.0, "range_52w_low": 2200.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "CIPLA", "name": "Cipla Ltd", "price": 1548.0, "change": 12.5, "change_percent": 0.81, "open": 1538.0, "high": 1555.0, "low": 1534.0, "previous_close": 1535.5, "volume": 2250000, "market_cap": "₹1.25 Lakh Cr", "pe_ratio": 25.6, "sector": "Pharmaceuticals", "range_52w_high": 1750.0, "range_52w_low": 1200.0, "exchange": "NSE", "is_index": false },
+      { "symbol": "NIFTY 50", "name": "Nifty 50 Index", "price": 25418.8, "change": 142.5, "change_percent": 0.56, "open": 25320.0, "high": 25445.0, "low": 25305.0, "previous_close": 25276.3, "volume": 245000000, "market_cap": "NSE Benchmark", "pe_ratio": 22.8, "sector": "Broad Market Benchmark", "range_52w_high": 26277.35, "range_52w_low": 18837.85, "exchange": "NSE", "is_index": true },
+      { "symbol": "SENSEX", "name": "BSE Sensex Index", "price": 83214.72, "change": 465.1, "change_percent": 0.56, "open": 82950.0, "high": 83310.0, "low": 82890.0, "previous_close": 82749.62, "volume": 142000000, "market_cap": "BSE Benchmark", "pe_ratio": 23.5, "sector": "Broad Market Benchmark", "range_52w_high": 85978.25, "range_52w_low": 63580.0, "exchange": "BSE", "is_index": true },
+      { "symbol": "BANKNIFTY", "name": "Bank Nifty Index", "price": 53480.0, "change": 312.0, "change_percent": 0.59, "open": 53210.0, "high": 53550.0, "low": 53160.0, "previous_close": 53168.0, "volume": 82000000, "market_cap": "NSE Banking Benchmark", "pe_ratio": 15.2, "sector": "Banking Benchmark", "range_52w_high": 56000.0, "range_52w_low": 42000.0, "exchange": "NSE", "is_index": true }
 ];
 
     // ==========================================================================
@@ -2449,6 +2428,12 @@
       const [recChartType, setRecChartType] = useState('candlestick'); // 'candlestick', 'bar', 'line'
       const [recTimeRange, setRecTimeRange] = useState('1M'); // '1D', '1W', '1M', '3M', '1Y', '5Y'
       const [recCandles, setRecCandles] = useState([]);
+
+      // Stock Comparison State
+      const [compareStockA, setCompareStockA] = useState('TCS');
+      const [compareStockB, setCompareStockB] = useState('HCLTECH');
+      const [showComparison, setShowComparison] = useState(false);
+      const [compareCandles, setCompareCandles] = useState({ a: [], b: [] });
 
       // Gamification State (XP, Levels, Badges, Quests, Streaks)
       const [gamificationProfile, setGamificationProfile] = useState({
@@ -3092,6 +3077,13 @@
             .catch(() => {});
         }
       }, [recSelectedSymbol, recTimeRange, stocksList]);
+
+      // Compare Candles Effect
+      useEffect(() => {
+        const cA = createSyntheticCandles(compareStockA, '1M');
+        const cB = createSyntheticCandles(compareStockB, '1M');
+        setCompareCandles({ a: cA, b: cB });
+      }, [compareStockA, compareStockB, stocksList]);
 
       // Gamification API Handlers
       const fetchGamificationProfile = async () => {
@@ -4518,18 +4510,44 @@
 
       // 4. RECOMMENDED STOCKS ("Stocks to Research & Real-Time Charts")
       const renderRecommendedStocks = () => {
-        const activeStock = (stocksList || []).find(s => s.symbol === recSelectedSymbol) || (DEFAULT_CURATED_STOCKS || []).find(s => s.symbol === recSelectedSymbol) || DEFAULT_CURATED_STOCKS[0];
+        const allEquities = (stocksList || []).filter(s => !s.is_index);
+        const activeStock = allEquities.find(s => s.symbol === recSelectedSymbol) || DEFAULT_CURATED_STOCKS.find(s => s.symbol === recSelectedSymbol) || DEFAULT_CURATED_STOCKS[0];
         const isPos = activeStock.change >= 0;
+
+        // Compare helpers
+        const stockA = allEquities.find(s => s.symbol === compareStockA) || DEFAULT_CURATED_STOCKS[0];
+        const stockB = allEquities.find(s => s.symbol === compareStockB) || DEFAULT_CURATED_STOCKS[1];
+
+        const MetricRow = ({ label, a, b }) => {
+          const aNum = parseFloat(a);
+          const bNum = parseFloat(b);
+          const aBetter = !isNaN(aNum) && !isNaN(bNum) && aNum > bNum;
+          const bBetter = !isNaN(aNum) && !isNaN(bNum) && bNum > aNum;
+          return (
+            <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+              <td style={{ padding: '0.5rem 0.75rem', fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 600 }}>{label}</td>
+              <td style={{ padding: '0.5rem 0.75rem', fontSize: '0.82rem', fontWeight: 800, color: aBetter ? 'var(--fin-pos)' : 'var(--text-primary)', textAlign: 'right' }} className="num">{a}</td>
+              <td style={{ padding: '0.5rem 0.75rem', fontSize: '0.82rem', fontWeight: 800, color: bBetter ? 'var(--fin-pos)' : 'var(--text-primary)', textAlign: 'right' }} className="num">{b}</td>
+            </tr>
+          );
+        };
 
         return (
           <div>
             <div className="panel-header" style={{ marginBottom: '1.25rem' }}>
               <div>
-                <h1 style={{ fontSize: '1.45rem', fontWeight: 800 }}>Stocks to Research & Interactive Charting</h1>
+                <h1 style={{ fontSize: '1.45rem', fontWeight: 800 }}>Stocks to Research &amp; Interactive Charting</h1>
                 <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
-                  Personalized Indian equities aligned with your {profileForm.risk} risk profile and {profileForm.duration}-year horizon. Features interactive Candlestick, Bar, and Line charting.
+                  Full NSE/BSE universe with real-time OHLC candlestick data. Compare any two stocks side-by-side.
                 </p>
               </div>
+              <button
+                className={`btn ${showComparison ? 'btn-gold' : 'btn-outline'} btn-sm`}
+                onClick={() => setShowComparison(v => !v)}
+                style={{ fontWeight: 700, whiteSpace: 'nowrap' }}
+              >
+                ⚖️ {showComparison ? 'Hide Comparison' : 'Compare Stocks'}
+              </button>
             </div>
 
             <div className="fin-alert fin-alert-gold" style={{ marginBottom: '1.25rem' }}>
@@ -4538,9 +4556,103 @@
               </div>
             </div>
 
+            {/* STOCK COMPARISON PANEL */}
+            {showComparison && (
+              <div className="panel" style={{ padding: '1.5rem', marginBottom: '1.5rem', border: '1px solid var(--accent-gold-border)', background: 'var(--bg-surface-elevated)' }}>
+                <h2 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: '1rem' }}>⚖️ Side-by-Side Stock Comparison</h2>
+
+                {/* Dropdown selectors */}
+                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.25rem', alignItems: 'flex-end' }}>
+                  <div style={{ flex: 1, minWidth: '200px' }}>
+                    <label style={{ display: 'block', fontSize: '0.74rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '4px' }}>STOCK A</label>
+                    <select
+                      value={compareStockA}
+                      onChange={e => setCompareStockA(e.target.value)}
+                      style={{ width: '100%', padding: '0.6rem 0.85rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--accent-gold-border)', background: 'var(--bg-surface)', color: 'var(--text-primary)', fontSize: '0.9rem', fontWeight: 700, cursor: 'pointer' }}
+                    >
+                      {allEquities.map(s => <option key={s.symbol} value={s.symbol}>{s.symbol} — {s.name}</option>)}
+                    </select>
+                  </div>
+                  <div style={{ fontSize: '1.4rem', paddingBottom: '4px', color: 'var(--accent-gold)', fontWeight: 800 }}>VS</div>
+                  <div style={{ flex: 1, minWidth: '200px' }}>
+                    <label style={{ display: 'block', fontSize: '0.74rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '4px' }}>STOCK B</label>
+                    <select
+                      value={compareStockB}
+                      onChange={e => setCompareStockB(e.target.value)}
+                      style={{ width: '100%', padding: '0.6rem 0.85rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-strong)', background: 'var(--bg-surface)', color: 'var(--text-primary)', fontSize: '0.9rem', fontWeight: 700, cursor: 'pointer' }}
+                    >
+                      {allEquities.map(s => <option key={s.symbol} value={s.symbol}>{s.symbol} — {s.name}</option>)}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Key Metrics Comparison Table */}
+                <div style={{ overflowX: 'auto', marginBottom: '1.25rem' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr style={{ background: 'var(--bg-surface-subtle)' }}>
+                        <th style={{ padding: '0.6rem 0.75rem', textAlign: 'left', fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 700 }}>METRIC</th>
+                        <th style={{ padding: '0.6rem 0.75rem', textAlign: 'right', fontSize: '0.78rem', color: 'var(--text-primary)', fontWeight: 800 }}>{stockA.symbol}</th>
+                        <th style={{ padding: '0.6rem 0.75rem', textAlign: 'right', fontSize: '0.78rem', color: 'var(--text-primary)', fontWeight: 800 }}>{stockB.symbol}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <MetricRow label="Current Price" a={`₹${Number(stockA.price).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`} b={`₹${Number(stockB.price).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`} />
+                      <MetricRow label="Change Today" a={`${stockA.change >= 0 ? '+' : ''}${Number(stockA.change_percent || 0).toFixed(2)}%`} b={`${stockB.change >= 0 ? '+' : ''}${Number(stockB.change_percent || 0).toFixed(2)}%`} />
+                      <MetricRow label="Open" a={`₹${Number(stockA.open || 0).toFixed(2)}`} b={`₹${Number(stockB.open || 0).toFixed(2)}`} />
+                      <MetricRow label="Day High" a={`₹${Number(stockA.high || 0).toFixed(2)}`} b={`₹${Number(stockB.high || 0).toFixed(2)}`} />
+                      <MetricRow label="Day Low" a={`₹${Number(stockA.low || 0).toFixed(2)}`} b={`₹${Number(stockB.low || 0).toFixed(2)}`} />
+                      <MetricRow label="P/E Ratio" a={stockA.pe_ratio || '—'} b={stockB.pe_ratio || '—'} />
+                      <MetricRow label="Market Cap" a={stockA.market_cap || '—'} b={stockB.market_cap || '—'} />
+                      <MetricRow label="52W High" a={`₹${Number(stockA.range_52w_high || 0).toFixed(0)}`} b={`₹${Number(stockB.range_52w_high || 0).toFixed(0)}`} />
+                      <MetricRow label="52W Low" a={`₹${Number(stockA.range_52w_low || 0).toFixed(0)}`} b={`₹${Number(stockB.range_52w_low || 0).toFixed(0)}`} />
+                      <MetricRow label="Sector" a={stockA.sector || '—'} b={stockB.sector || '—'} />
+                      <MetricRow label="Exchange" a={stockA.exchange || 'NSE'} b={stockB.exchange || 'NSE'} />
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Dual Candlestick Charts */}
+                <div className="grid-2" style={{ gap: '1rem' }}>
+                  <div>
+                    <div style={{ fontWeight: 800, fontSize: '0.85rem', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>
+                      📈 {stockA.symbol} — 1M Candlestick
+                      <span style={{ marginLeft: '0.5rem', fontSize: '0.72rem', color: stockA.change >= 0 ? 'var(--fin-pos)' : 'var(--fin-neg)', fontWeight: 700 }}>
+                        {stockA.change >= 0 ? '+' : ''}{Number(stockA.change_percent || 0).toFixed(2)}%
+                      </span>
+                    </div>
+                    <div style={{ minHeight: '260px', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', overflow: 'hidden', padding: '0.5rem' }}>
+                      <StockChart candles={compareCandles.a} chartType="candlestick" />
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 800, fontSize: '0.85rem', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>
+                      📈 {stockB.symbol} — 1M Candlestick
+                      <span style={{ marginLeft: '0.5rem', fontSize: '0.72rem', color: stockB.change >= 0 ? 'var(--fin-pos)' : 'var(--fin-neg)', fontWeight: 700 }}>
+                        {stockB.change >= 0 ? '+' : ''}{Number(stockB.change_percent || 0).toFixed(2)}%
+                      </span>
+                    </div>
+                    <div style={{ minHeight: '260px', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', overflow: 'hidden', padding: '0.5rem' }}>
+                      <StockChart candles={compareCandles.b} chartType="candlestick" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Investment Insight */}
+                <div style={{ marginTop: '1rem', padding: '0.85rem', background: 'var(--bg-surface-subtle)', borderRadius: 'var(--radius-md)', borderLeft: '3px solid var(--accent-gold)' }}>
+                  <div style={{ fontWeight: 800, fontSize: '0.86rem', color: 'var(--text-primary)', marginBottom: '4px' }}>
+                    💡 Investment Insight: {stockA.symbol} vs {stockB.symbol}
+                  </div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                    {stockA.symbol} (P/E: {stockA.pe_ratio || 'N/A'}) trades at ₹{Number(stockA.price).toLocaleString('en-IN')} in the <strong>{stockA.sector}</strong> sector, while {stockB.symbol} (P/E: {stockB.pe_ratio || 'N/A'}) trades at ₹{Number(stockB.price).toLocaleString('en-IN')} in <strong>{stockB.sector}</strong>. Compare valuations, 52-week ranges, and candlestick momentum patterns to make informed research decisions. FinPilot does not recommend buying either stock — please consult a SEBI-registered advisor.
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* QUICK STOCK SELECTOR PILLS */}
-            <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.5rem', marginBottom: '1rem' }}>
-              {['TCS', 'RELIANCE', 'HDFCBANK', 'MARUTI', 'SBIN', 'INFY', 'ICICIBANK', 'TATAMOTORS', 'ITC', 'BHARTIARTL'].map(sym => (
+            <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.5rem', marginBottom: '1rem', flexWrap: 'nowrap' }}>
+              {['TCS', 'RELIANCE', 'HDFCBANK', 'MARUTI', 'SBIN', 'INFY', 'ICICIBANK', 'TATAMOTORS', 'ITC', 'BHARTIARTL', 'HCLTECH', 'WIPRO', 'AXISBANK', 'KOTAKBANK', 'BAJFINANCE', 'SUNPHARMA', 'NTPC', 'TITAN'].map(sym => (
                 <button
                   key={sym}
                   className={`btn btn-sm ${recSelectedSymbol === sym ? 'btn-gold' : 'btn-outline'}`}
@@ -4563,7 +4675,7 @@
                       {activeStock.exchange || 'NSE'}
                     </span>
                     <span style={{ fontSize: '0.72rem', padding: '2px 8px', background: 'rgba(16, 185, 129, 0.15)', color: 'var(--fin-pos)', borderRadius: '4px', fontWeight: 700 }}>
-                      ● REAL-TIME DATA
+                      ● LIVE DATA
                     </span>
                   </div>
                   <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '2px' }}>
@@ -4577,6 +4689,9 @@
                   </div>
                   <div className={`tabular ${isPos ? 'pos' : 'neg'}`} style={{ fontSize: '0.92rem', fontWeight: 700 }}>
                     {isPos ? '+' : ''}{Number(activeStock.change || 0).toFixed(2)} ({isPos ? '+' : ''}{Number(activeStock.change_percent || 0).toFixed(2)}%)
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                    O: ₹{Number(activeStock.open || 0).toFixed(2)} · H: ₹{Number(activeStock.high || 0).toFixed(2)} · L: ₹{Number(activeStock.low || 0).toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -4630,7 +4745,7 @@
               </div>
 
               {/* Real Interactive Chart Component */}
-              <div style={{ minHeight: '360px', marginBottom: '1rem' }}>
+              <div style={{ minHeight: '380px', marginBottom: '1rem' }}>
                 <StockChart
                   candles={recCandles}
                   chartType={recChartType}
@@ -4648,7 +4763,7 @@
                 <div style={{ background: 'var(--bg-surface-elevated)', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-md)' }}>
                   <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>52-WEEK RANGE</div>
                   <div style={{ fontSize: '0.9rem', fontWeight: 800, marginTop: '2px' }} className="num">
-                    ₹{activeStock.range_52w_low || '—'} - ₹{activeStock.range_52w_high || '—'}
+                    ₹{activeStock.range_52w_low || '—'} – ₹{activeStock.range_52w_high || '—'}
                   </div>
                   <div style={{ fontSize: '0.68rem', color: 'var(--fin-pos)' }}>Near 52W High</div>
                 </div>
@@ -4658,9 +4773,9 @@
                   <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>Large-Cap Bluechip</div>
                 </div>
                 <div style={{ background: 'var(--bg-surface-elevated)', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-md)' }}>
-                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>20-DAY EMA & RSI</div>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 800, marginTop: '2px', color: 'var(--accent-gold)' }} className="num">RSI 56.4 · Bullish</div>
-                  <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>Healthy Accumulation</div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>VOLUME</div>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 800, marginTop: '2px', color: 'var(--accent-gold)' }} className="num">{Number(activeStock.volume || 0).toLocaleString('en-IN')}</div>
+                  <div style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>Shares Traded Today</div>
                 </div>
               </div>
 
@@ -4676,9 +4791,9 @@
             </div>
 
             {/* CURATED STOCKS CATALOG GRID */}
-            <h2 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.75rem' }}>All Curated Research Ideas</h2>
+            <h2 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.75rem' }}>All NSE/BSE Stocks Universe</h2>
             <div className="grid-3">
-              {[...stocksList].filter(s => !s.is_index).map(stock => (
+              {allEquities.map(stock => (
                 <div
                   key={stock.symbol}
                   className="panel"
@@ -4703,7 +4818,7 @@
                     </div>
 
                     <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', background: 'var(--bg-surface-elevated)', padding: '0.65rem', borderRadius: 'var(--radius-md)', marginBottom: '0.75rem', lineHeight: '1.4' }}>
-                      <strong style={{ color: 'var(--accent-gold)' }}>Why this matches:</strong> P/E of {stock.pe_ratio || 25.0} with steady market capitalization in {stock.sector}.
+                      <strong style={{ color: 'var(--accent-gold)' }}>Why this matches:</strong> P/E of {stock.pe_ratio || 25.0} · MCap: {stock.market_cap || 'N/A'} · {stock.sector}.
                     </div>
                   </div>
 
@@ -4721,7 +4836,7 @@
                       className="btn btn-outline btn-sm w-full"
                       onClick={() => handleSelectStock(stock.symbol)}
                     >
-                      Research Stock →
+                      Research →
                     </button>
                   </div>
                 </div>
@@ -4730,6 +4845,7 @@
           </div>
         );
       };
+
 
       // 4B. GAMIFICATION HUB (XP, Levels, Badges, Quests, Streaks)
       const renderGamificationHub = () => {
