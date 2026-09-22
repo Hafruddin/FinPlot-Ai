@@ -142,3 +142,83 @@ class FinancialFreedomPlanResponse(BaseModel):
     results_data: Optional[dict] = None
     updated_at: datetime.datetime
 
+
+# --- Market Gateway Schemas ---
+class MarketStatusResponse(BaseModel):
+    status: str
+    state: str
+    is_open: bool
+    time: str
+    date: str
+    exchange: str
+    active_provider: str
+    last_updated: str
+
+
+class StockQuoteResponse(BaseModel):
+    symbol: str
+    name: Optional[str] = None
+    price: float
+    change: float
+    change_percent: float
+    open: Optional[float] = None
+    high: Optional[float] = None
+    low: Optional[float] = None
+    previous_close: Optional[float] = None
+    volume: Optional[int] = None
+    market_cap: Optional[str] = None
+    pe_ratio: Optional[float] = None
+    sector: Optional[str] = None
+    exchange: Optional[str] = "NSE"
+    is_index: Optional[bool] = False
+    source: Optional[str] = "FinPilot"
+    data_mode: Optional[str] = "LIVE"
+
+
+class CandleItem(BaseModel):
+    time: str
+    open: float
+    high: float
+    low: float
+    close: float
+    volume: int
+
+
+class StockHistoryResponse(BaseModel):
+    symbol: str
+    timeframe: str
+    source: str
+    candles: List[CandleItem]
+
+
+class StockExplainerResponse(BaseModel):
+    symbol: str
+    name: str
+    summary: str
+    business_model: str
+    key_metrics: dict
+    educational_takeaway: str
+    what_they_do: Optional[str] = None
+    how_they_make_money: Optional[str] = None
+    growth_drivers: Optional[str] = None
+    major_risks: Optional[str] = None
+    beginner_takeaway: Optional[str] = None
+
+
+class TechnicalIndicatorsResponse(BaseModel):
+    sma_20: Optional[float] = None
+    ema_20: Optional[float] = None
+    rsi: Optional[float] = None
+    macd: Optional[dict] = None
+    bollinger: Optional[dict] = None
+    atr: Optional[float] = None
+    momentum_signal: str
+    source: str
+
+
+class MarketHealthResponse(BaseModel):
+    status: str
+    timestamp: float
+    services: dict
+
+

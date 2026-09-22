@@ -4,6 +4,16 @@ import math
 import random
 import json
 from typing import List, Dict, Optional
+
+# Load environment variables from .env if present
+_env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env")
+if os.path.exists(_env_path):
+    with open(_env_path, "r", encoding="utf-8") as _f:
+        for _line in _f:
+            _line = _line.strip()
+            if _line and not _line.startswith("#") and "=" in _line:
+                _k, _v = _line.split("=", 1)
+                os.environ.setdefault(_k.strip(), _v.strip())
 from fastapi import FastAPI, Depends, HTTPException, status, Query
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -27,6 +37,8 @@ from backend.services.financial_freedom_service import (
     calculate_scenarios,
     calculate_readiness_score
 )
+from backend.services.market.market_service import market_service
+from backend.api.market_routes import router as market_router
 
 # Root directory for serving static frontend files
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -35,6 +47,9 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="FinPilot AI Core API", version="1.0.0")
+
+# Register Real Market Data Gateway Router
+app.include_router(market_router)
 
 # Enable CORS for frontend clients
 app.add_middleware(
@@ -63,7 +78,7 @@ def signup(user_data: UserRegister, db: Session = Depends(get_db)):
         name=user_data.name,
         email=user_data.email,
         hashed_password=hashed_pwd,
-        financial_iq=340
+        financial_iq=650
     )
     
     db.add(new_user)
@@ -730,130 +745,31 @@ ALL_STOCKS_DATA = [
 @app.get("/api/markets/status")
 def get_market_status():
     """Returns current Indian market status (IST) and server timestamp."""
-    utc_now = datetime.datetime.now(datetime.timezone.utc)
-    ist_now = utc_now + datetime.timedelta(hours=5, minutes=30)
-    
-    # NSE/BSE trading days: Monday (0) to Friday (4)
-    # Market hours: 09:15 to 15:30 IST
-    weekday = ist_now.weekday()
-    hour = ist_now.hour
-    minute = ist_now.minute
-    total_minutes = hour * 60 + minute
-    
-    market_open = (weekday < 5) and (9 * 60 + 15 <= total_minutes <= 15 * 60 + 30)
-    
-    status_str = "Market Open" if market_open else "Market Closed"
-    time_str = ist_now.strftime("%H:%M:%S IST")
-    date_str = ist_now.strftime("%d %b %Y")
-    
-    return {
-        "status": status_str,
-        "is_open": market_open,
-        "time": time_str,
-        "date": date_str,
-        "exchange": "NSE / BSE",
-        "data_mode": "Live Feed (Simulation Supported)",
-        "last_updated": time_str
-    }
+    return market_service.get_market_status()
 
 @app.get("/api/markets/stocks")
-def get_stocks_list():
+async def get_stocks_list():
     """Returns all tracked indices and equities with real-time style metrics."""
-    return ALL_STOCKS_DATA
+    return await market_service.get_all_stocks()
 
 @app.get("/api/markets/search")
-def search_stocks(q: str = Query("", description="Search term for symbol, name, or sector")):
+async def search_stocks(q: str = Query("", description="Search term for symbol, name, or sector")):
     """Filters stocks by symbol, company name, or sector."""
-    term = q.strip().lower()
-    if not term:
-        return ALL_STOCKS_DATA
-    return [
-        s for s in ALL_STOCKS_DATA
-        if term in s["symbol"].lower() or term in s["name"].lower() or term in s["sector"].lower()
-    ]
+    return await market_service.search_stocks(q)
 
 @app.get("/api/markets/stock/{symbol}/history")
-def get_stock_history(symbol: str, timeframe: str = Query("1M", alias="range", pattern="^(1D|1W|1M|3M|6M|1Y|5Y)$"), interval: Optional[str] = None):
+async def get_stock_history(symbol: str, timeframe: str = Query("1M", alias="range", pattern="^(1D|1W|1M|3M|6M|1Y|5Y)$"), interval: Optional[str] = None):
     """
-    Generates realistic historical OHLC candlesticks + volume data
+    Returns real or modeled historical OHLC candlesticks + volume data
     tailored to the specific asset's baseline price and volatility.
     """
-    sym = symbol.upper()
-    stock = next((s for s in ALL_STOCKS_DATA if s["symbol"] == sym), None)
-    base_price = stock["price"] if stock else 1500.0
-    volatility = 0.012 if ("Index" in (stock.get("sector","") if stock else "")) else 0.018
-
-    # Determine number of candles and date steps
-    now = datetime.datetime.now(datetime.timezone.utc)
-    range_config = {
-        "1D": {"points": 45, "step_minutes": 5, "vol": 0.003},
-        "1W": {"points": 35, "step_hours": 2, "vol": 0.007},
-        "1M": {"points": 30, "step_days": 1, "vol": 0.014},
-        "3M": {"points": 65, "step_days": 1, "vol": 0.016},
-        "6M": {"points": 90, "step_days": 2, "vol": 0.019},
-        "1Y": {"points": 120, "step_days": 3, "vol": 0.022},
-        "5Y": {"points": 180, "step_days": 10, "vol": 0.035},
-    }
-    cfg = range_config.get(timeframe, range_config["1M"])
-    points = cfg["points"]
-    vol = cfg["vol"]
-
-    candles = []
-    # Work backwards from now to determine timestamps, then generate smooth price drift
-    times = []
-    curr = now
-    for i in range(points):
-        if "step_minutes" in cfg:
-            curr = curr - datetime.timedelta(minutes=cfg["step_minutes"])
-            time_str = curr.strftime("%H:%M")
-        elif "step_hours" in cfg:
-            curr = curr - datetime.timedelta(hours=cfg["step_hours"])
-            time_str = curr.strftime("%d %b %H:%M")
-        else:
-            curr = curr - datetime.timedelta(days=cfg["step_days"])
-            time_str = curr.strftime("%d %b %Y")
-        times.append(time_str)
-    times.reverse()
-
-    # Generate random walk with mean-reversion around base_price
-    # Seed based on symbol and timeframe for consistent charting across calls
-    rng = random.Random(hash(f"{sym}_{timeframe}"))
-    p = base_price * (1.0 - (rng.uniform(-0.08, 0.08)))
-    
-    for i in range(points):
-        # Progress towards current price near the end
-        target_pull = (base_price - p) * (0.05 + 0.95 * (i / points))
-        delta = (rng.gauss(0, vol) * p) + (target_pull * 0.15)
-        o = round(p, 2)
-        c = round(max(10.0, p + delta), 2)
-        h = round(max(o, c) + abs(rng.gauss(0, vol * 0.6) * p), 2)
-        l = round(min(o, c) - abs(rng.gauss(0, vol * 0.6) * p), 2)
-        volume = int(abs(rng.gauss(150000, 50000)) + abs(c - o) * 10000)
-        
-        candles.append({
-            "time": times[i],
-            "open": o,
-            "high": h,
-            "low": l,
-            "close": c,
-            "volume": volume
-        })
-        p = c
-
-    # Ensure last candle close strictly equals current price
-    if candles:
-        candles[-1]["close"] = round(base_price, 2)
-        if candles[-1]["high"] < base_price:
-            candles[-1]["high"] = round(base_price * 1.002, 2)
-        if candles[-1]["low"] > base_price:
-            candles[-1]["low"] = round(base_price * 0.998, 2)
-
+    res = await market_service.get_history(symbol, timeframe)
     return {
-        "symbol": sym,
-        "range": range,
-        "base_price": base_price,
-        "candle_count": len(candles),
-        "candles": candles
+        "symbol": res["symbol"],
+        "range": timeframe,
+        "source": res.get("source", "FinPilot Market Gateway"),
+        "candle_count": len(res.get("candles", [])),
+        "candles": res.get("candles", [])
     }
 
 @app.get("/api/markets/stock/{symbol}/explain")

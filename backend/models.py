@@ -10,7 +10,7 @@ class User(Base):
     name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
-    financial_iq = Column(Integer, default=340)
+    financial_iq = Column(Integer, default=650)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     paper_cash = Column(Float, default=100000.0)
