@@ -130,15 +130,31 @@ class MarketDatasetLoader:
 
         company_names = {
             "RELIANCE": "Reliance Industries Ltd",
+            "TCS": "Tata Consultancy Services Ltd",
             "SBIN": "State Bank of India",
             "HDFCBANK": "HDFC Bank Ltd",
             "MARUTI": "Maruti Suzuki India Ltd"
         }
         sectors = {
-            "RELIANCE": "Energy & Digital",
+            "RELIANCE": "Energy & Telecom",
+            "TCS": "Information Technology",
             "SBIN": "Public Sector Banking",
-            "HDFCBANK": "Private Banking",
+            "HDFCBANK": "Banking & Finance",
             "MARUTI": "Automobile & EV"
+        }
+        market_caps = {
+            "RELIANCE": "₹16.88 Lakh Cr",
+            "TCS": "₹7.64 Lakh Cr",
+            "HDFCBANK": "₹5.68 Lakh Cr",
+            "SBIN": "₹8.89 Lakh Cr",
+            "MARUTI": "₹3.82 Lakh Cr"
+        }
+        pe_ratios = {
+            "RELIANCE": 22.59,
+            "TCS": 24.2,
+            "HDFCBANK": 15.8,
+            "SBIN": 11.4,
+            "MARUTI": 28.6
         }
 
         quote = {
@@ -152,8 +168,8 @@ class MarketDatasetLoader:
             "low": latest["low"] if latest else curr_price,
             "previous_close": p_close,
             "volume": latest["volume"] if latest else 10000,
-            "market_cap": "₹15.2 Lakh Cr" if symbol == "RELIANCE" else "₹12.6 Lakh Cr" if symbol == "HDFCBANK" else "₹7.4 Lakh Cr" if symbol == "SBIN" else "₹3.8 Lakh Cr",
-            "pe_ratio": 28.4 if symbol == "RELIANCE" else 19.5 if symbol == "HDFCBANK" else 10.2 if symbol == "SBIN" else 26.8,
+            "market_cap": market_caps.get(symbol, "₹2.5 Lakh Cr"),
+            "pe_ratio": pe_ratios.get(symbol, 20.0),
             "sector": sectors.get(symbol, "Indian Equities"),
             "52_week_high": max([c["high"] for c in ordered_candles] + [latest["w52_h"] if latest else 0]),
             "52_week_low": min([c["low"] for c in ordered_candles if c["low"] > 0] + [latest["w52_l"] if latest else 99999]),

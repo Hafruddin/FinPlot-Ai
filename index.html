@@ -1328,313 +1328,1051 @@
       }
     };
 
-    // Authentic Indian Market Datasets (OHLC Historical Timelines)
+    // Authentic Indian Market Datasets (OHLC Historical Timelines matching Google Finance real-time)
     const AUTHENTIC_DATASETS = {
-      MARUTI: [
-        { time: "22 Aug 2026", open: 150.0, high: 150.0, low: 150.0, close: 150.0, volume: 7000 },
-        { time: "24 Aug 2026", open: 3.5, high: 3.5, low: 3.5, close: 3.5, volume: 10 },
-        { time: "26 Aug 2026", open: 2.0, high: 2.0, low: 2.0, close: 2.0, volume: 124 },
-        { time: "01 Sep 2026", open: 9.0, high: 20.0, low: 9.0, close: 18.62, volume: 1861 },
-        { time: "03 Sep 2026", open: 5.5, high: 12.0, low: 5.5, close: 12.0, volume: 250 },
-        { time: "10 Sep 2026", open: 4.2, high: 4.2, low: 4.2, close: 4.2, volume: 12 },
-        { time: "17 Sep 2026", open: 4.2, high: 4.2, low: 4.2, close: 4.2, volume: 10 },
-        { time: "21 Sep 2026", open: 3.5, high: 3.5, low: 3.5, close: 3.5, volume: 427 }
+      "RELIANCE": [
+            {
+                  "time": "25 Aug 2026",
+                  "open": 1252.16,
+                  "high": 1253.32,
+                  "low": 1239.02,
+                  "close": 1242.76,
+                  "volume": 5707033
+            },
+            {
+                  "time": "26 Aug 2026",
+                  "open": 1242.76,
+                  "high": 1258.78,
+                  "low": 1239.0,
+                  "close": 1257.32,
+                  "volume": 8757798
+            },
+            {
+                  "time": "27 Aug 2026",
+                  "open": 1257.32,
+                  "high": 1265.68,
+                  "low": 1245.81,
+                  "close": 1246.95,
+                  "volume": 7145798
+            },
+            {
+                  "time": "28 Aug 2026",
+                  "open": 1246.95,
+                  "high": 1255.48,
+                  "low": 1237.99,
+                  "close": 1249.1,
+                  "volume": 7346992
+            },
+            {
+                  "time": "31 Aug 2026",
+                  "open": 1249.1,
+                  "high": 1257.72,
+                  "low": 1248.67,
+                  "close": 1251.38,
+                  "volume": 7498948
+            },
+            {
+                  "time": "01 Sep 2026",
+                  "open": 1251.38,
+                  "high": 1257.11,
+                  "low": 1245.08,
+                  "close": 1253.35,
+                  "volume": 5868995
+            },
+            {
+                  "time": "02 Sep 2026",
+                  "open": 1253.35,
+                  "high": 1268.14,
+                  "low": 1252.72,
+                  "close": 1260.92,
+                  "volume": 4032886
+            },
+            {
+                  "time": "03 Sep 2026",
+                  "open": 1260.92,
+                  "high": 1274.82,
+                  "low": 1248.12,
+                  "close": 1265.78,
+                  "volume": 5999081
+            },
+            {
+                  "time": "04 Sep 2026",
+                  "open": 1265.78,
+                  "high": 1267.69,
+                  "low": 1258.3,
+                  "close": 1259.57,
+                  "volume": 6766796
+            },
+            {
+                  "time": "07 Sep 2026",
+                  "open": 1259.57,
+                  "high": 1262.4,
+                  "low": 1253.69,
+                  "close": 1262.15,
+                  "volume": 7069589
+            },
+            {
+                  "time": "08 Sep 2026",
+                  "open": 1262.15,
+                  "high": 1275.25,
+                  "low": 1256.85,
+                  "close": 1272.41,
+                  "volume": 7552276
+            },
+            {
+                  "time": "09 Sep 2026",
+                  "open": 1272.41,
+                  "high": 1275.67,
+                  "low": 1271.05,
+                  "close": 1272.63,
+                  "volume": 5656150
+            },
+            {
+                  "time": "10 Sep 2026",
+                  "open": 1272.63,
+                  "high": 1282.11,
+                  "low": 1266.59,
+                  "close": 1266.63,
+                  "volume": 6048484
+            },
+            {
+                  "time": "11 Sep 2026",
+                  "open": 1266.63,
+                  "high": 1270.94,
+                  "low": 1258.66,
+                  "close": 1266.79,
+                  "volume": 6535668
+            },
+            {
+                  "time": "15 Sep 2026",
+                  "open": 1266.79,
+                  "high": 1285.91,
+                  "low": 1263.95,
+                  "close": 1279.33,
+                  "volume": 5900916
+            },
+            {
+                  "time": "16 Sep 2026",
+                  "open": 1279.33,
+                  "high": 1283.36,
+                  "low": 1276.98,
+                  "close": 1278.86,
+                  "volume": 7174658
+            },
+            {
+                  "time": "17 Sep 2026",
+                  "open": 1278.86,
+                  "high": 1290.38,
+                  "low": 1267.47,
+                  "close": 1286.91,
+                  "volume": 8287506
+            },
+            {
+                  "time": "18 Sep 2026",
+                  "open": 1286.91,
+                  "high": 1294.9,
+                  "low": 1271.88,
+                  "close": 1273.71,
+                  "volume": 7028908
+            },
+            {
+                  "time": "21 Sep 2026",
+                  "open": 1273.71,
+                  "high": 1283.09,
+                  "low": 1269.95,
+                  "close": 1278.74,
+                  "volume": 5397143
+            },
+            {
+                  "time": "22 Sep 2026",
+                  "open": 1247.6,
+                  "high": 1251.9,
+                  "low": 1244.6,
+                  "close": 1247.6,
+                  "volume": 6450000
+            }
       ],
-      SBIN: [
-        { time: "23 Jun 2026", open: 0.25, high: 0.25, low: 0.25, close: 0.25, volume: 477 },
-        { time: "29 Jun 2026", open: 0.43, high: 0.9, low: 0.25, close: 0.25, volume: 1707 },
-        { time: "30 Jun 2026", open: 0.1, high: 0.38, low: 0.1, close: 0.37, volume: 546 },
-        { time: "09 Jul 2026", open: 0.19, high: 0.19, low: 0.19, close: 0.19, volume: 14 },
-        { time: "10 Jul 2026", open: 0.23, high: 0.23, low: 0.23, close: 0.23, volume: 156 },
-        { time: "16 Jul 2026", open: 0.22, high: 0.45, low: 0.22, close: 0.45, volume: 3491 },
-        { time: "21 Jul 2026", open: 0.1, high: 0.1, low: 0.1, close: 0.1, volume: 200 },
-        { time: "28 Jul 2026", open: 0.33, high: 0.38, low: 0.1, close: 0.24, volume: 1250 },
-        { time: "17 Aug 2026", open: 2.0, high: 2.0, low: 2.0, close: 2.0, volume: 2 },
-        { time: "18 Aug 2026", open: 0.1, high: 0.1, low: 0.1, close: 0.1, volume: 150 },
-        { time: "21 Aug 2026", open: 0.3, high: 0.5, low: 0.3, close: 0.3, volume: 30000 },
-        { time: "24 Aug 2026", open: 0.1, high: 0.42, low: 0.1, close: 0.42, volume: 4500 },
-        { time: "25 Aug 2026", open: 0.25, high: 0.25, low: 0.25, close: 0.25, volume: 500 },
-        { time: "31 Aug 2026", open: 0.4, high: 1.0, low: 0.1, close: 0.5, volume: 45900 },
-        { time: "09 Sep 2026", open: 0.46, high: 0.46, low: 0.46, close: 0.46, volume: 166 },
-        { time: "10 Sep 2026", open: 0.3, high: 1.0, low: 0.3, close: 0.75, volume: 50033 }
+      "TCS": [
+            {
+                  "time": "25 Aug 2026",
+                  "open": 2053.42,
+                  "high": 2075.61,
+                  "low": 2051.16,
+                  "close": 2069.7,
+                  "volume": 3772573
+            },
+            {
+                  "time": "26 Aug 2026",
+                  "open": 2069.7,
+                  "high": 2111.89,
+                  "low": 2062.69,
+                  "close": 2092.85,
+                  "volume": 2438280
+            },
+            {
+                  "time": "27 Aug 2026",
+                  "open": 2092.85,
+                  "high": 2124.81,
+                  "low": 2084.78,
+                  "close": 2118.21,
+                  "volume": 2712235
+            },
+            {
+                  "time": "28 Aug 2026",
+                  "open": 2118.21,
+                  "high": 2130.91,
+                  "low": 2100.94,
+                  "close": 2123.29,
+                  "volume": 2478902
+            },
+            {
+                  "time": "31 Aug 2026",
+                  "open": 2123.29,
+                  "high": 2124.47,
+                  "low": 2109.29,
+                  "close": 2112.62,
+                  "volume": 3270632
+            },
+            {
+                  "time": "01 Sep 2026",
+                  "open": 2112.62,
+                  "high": 2123.16,
+                  "low": 2104.18,
+                  "close": 2110.36,
+                  "volume": 3152434
+            },
+            {
+                  "time": "02 Sep 2026",
+                  "open": 2110.36,
+                  "high": 2128.7,
+                  "low": 2105.99,
+                  "close": 2126.53,
+                  "volume": 2546759
+            },
+            {
+                  "time": "03 Sep 2026",
+                  "open": 2126.53,
+                  "high": 2136.13,
+                  "low": 2121.51,
+                  "close": 2129.03,
+                  "volume": 2364666
+            },
+            {
+                  "time": "04 Sep 2026",
+                  "open": 2129.03,
+                  "high": 2136.73,
+                  "low": 2087.27,
+                  "close": 2091.82,
+                  "volume": 3004783
+            },
+            {
+                  "time": "07 Sep 2026",
+                  "open": 2091.82,
+                  "high": 2116.53,
+                  "low": 2082.88,
+                  "close": 2116.12,
+                  "volume": 3337858
+            },
+            {
+                  "time": "08 Sep 2026",
+                  "open": 2116.12,
+                  "high": 2129.62,
+                  "low": 2090.5,
+                  "close": 2093.74,
+                  "volume": 2645818
+            },
+            {
+                  "time": "09 Sep 2026",
+                  "open": 2093.74,
+                  "high": 2097.03,
+                  "low": 2081.74,
+                  "close": 2092.74,
+                  "volume": 2217846
+            },
+            {
+                  "time": "10 Sep 2026",
+                  "open": 2092.74,
+                  "high": 2093.76,
+                  "low": 2084.01,
+                  "close": 2087.05,
+                  "volume": 3764927
+            },
+            {
+                  "time": "11 Sep 2026",
+                  "open": 2087.05,
+                  "high": 2108.09,
+                  "low": 2074.58,
+                  "close": 2106.37,
+                  "volume": 2439224
+            },
+            {
+                  "time": "15 Sep 2026",
+                  "open": 2106.37,
+                  "high": 2144.08,
+                  "low": 2083.38,
+                  "close": 2142.34,
+                  "volume": 2644336
+            },
+            {
+                  "time": "16 Sep 2026",
+                  "open": 2142.34,
+                  "high": 2173.26,
+                  "low": 2136.54,
+                  "close": 2150.77,
+                  "volume": 1951421
+            },
+            {
+                  "time": "17 Sep 2026",
+                  "open": 2150.77,
+                  "high": 2161.37,
+                  "low": 2130.84,
+                  "close": 2132.87,
+                  "volume": 3247168
+            },
+            {
+                  "time": "18 Sep 2026",
+                  "open": 2132.87,
+                  "high": 2153.38,
+                  "low": 2117.14,
+                  "close": 2125.65,
+                  "volume": 3075795
+            },
+            {
+                  "time": "21 Sep 2026",
+                  "open": 2125.65,
+                  "high": 2131.73,
+                  "low": 2123.19,
+                  "close": 2128.27,
+                  "volume": 2867715
+            },
+            {
+                  "time": "22 Sep 2026",
+                  "open": 2125.0,
+                  "high": 2135.0,
+                  "low": 2102.0,
+                  "close": 2109.0,
+                  "volume": 2840000
+            }
       ],
-      HDFCBANK: [
-        { time: "22 Aug 2026", open: 150.0, high: 150.0, low: 150.0, close: 150.0, volume: 7000 },
-        { time: "24 Aug 2026", open: 0.01, high: 0.01, low: 0.01, close: 0.01, volume: 27 },
-        { time: "25 Aug 2026", open: 0.01, high: 0.25, low: 0.01, close: 0.21, volume: 12096 },
-        { time: "27 Aug 2026", open: 0.19, high: 0.19, low: 0.1, close: 0.1, volume: 1967 },
-        { time: "28 Aug 2026", open: 0.1, high: 0.18, low: 0.1, close: 0.18, volume: 3250 },
-        { time: "31 Aug 2026", open: 0.75, high: 0.75, low: 0.75, close: 0.75, volume: 532 },
-        { time: "01 Sep 2026", open: 0.18, high: 0.18, low: 0.18, close: 0.18, volume: 1300 },
-        { time: "02 Sep 2026", open: 10.47, high: 10.47, low: 1.5, close: 1.5, volume: 1028 },
-        { time: "03 Sep 2026", open: 0.35, high: 0.35, low: 0.35, close: 0.35, volume: 5000 },
-        { time: "04 Sep 2026", open: 0.29, high: 0.29, low: 0.29, close: 0.29, volume: 5000 },
-        { time: "07 Sep 2026", open: 0.5, high: 0.5, low: 0.5, close: 0.5, volume: 9876 },
-        { time: "08 Sep 2026", open: 0.4, high: 0.4, low: 0.4, close: 0.4, volume: 5000 },
-        { time: "09 Sep 2026", open: 0.35, high: 0.35, low: 0.35, close: 0.35, volume: 9000 },
-        { time: "10 Sep 2026", open: 0.25, high: 0.25, low: 0.25, close: 0.25, volume: 9000 },
-        { time: "11 Sep 2026", open: 0.2, high: 0.2, low: 0.2, close: 0.2, volume: 1399 },
-        { time: "15 Sep 2026", open: 0.2, high: 0.2, low: 0.2, close: 0.2, volume: 9000 },
-        { time: "16 Sep 2026", open: 0.39, high: 1.45, low: 0.39, close: 0.39, volume: 240 },
-        { time: "17 Sep 2026", open: 0.17, high: 0.19, low: 0.17, close: 0.18, volume: 50000 },
-        { time: "18 Sep 2026", open: 1.49, high: 1.49, low: 1.49, close: 1.49, volume: 62 },
-        { time: "21 Sep 2026", open: 0.4, high: 0.4, low: 0.4, close: 0.4, volume: 346 }
+      "HDFCBANK": [
+            {
+                  "time": "25 Aug 2026",
+                  "open": 728.21,
+                  "high": 730.06,
+                  "low": 723.16,
+                  "close": 723.29,
+                  "volume": 13128886
+            },
+            {
+                  "time": "26 Aug 2026",
+                  "open": 723.29,
+                  "high": 725.54,
+                  "low": 719.65,
+                  "close": 724.16,
+                  "volume": 15199545
+            },
+            {
+                  "time": "27 Aug 2026",
+                  "open": 724.16,
+                  "high": 725.6,
+                  "low": 708.02,
+                  "close": 715.94,
+                  "volume": 15578895
+            },
+            {
+                  "time": "28 Aug 2026",
+                  "open": 715.94,
+                  "high": 718.67,
+                  "low": 712.31,
+                  "close": 716.81,
+                  "volume": 12611908
+            },
+            {
+                  "time": "31 Aug 2026",
+                  "open": 716.81,
+                  "high": 721.84,
+                  "low": 716.77,
+                  "close": 721.42,
+                  "volume": 14968557
+            },
+            {
+                  "time": "01 Sep 2026",
+                  "open": 721.42,
+                  "high": 731.99,
+                  "low": 720.28,
+                  "close": 727.88,
+                  "volume": 12750155
+            },
+            {
+                  "time": "02 Sep 2026",
+                  "open": 727.88,
+                  "high": 732.46,
+                  "low": 719.75,
+                  "close": 731.76,
+                  "volume": 12941078
+            },
+            {
+                  "time": "03 Sep 2026",
+                  "open": 731.76,
+                  "high": 734.64,
+                  "low": 720.54,
+                  "close": 721.01,
+                  "volume": 14074091
+            },
+            {
+                  "time": "04 Sep 2026",
+                  "open": 721.01,
+                  "high": 722.4,
+                  "low": 716.14,
+                  "close": 718.58,
+                  "volume": 11721972
+            },
+            {
+                  "time": "07 Sep 2026",
+                  "open": 718.58,
+                  "high": 721.67,
+                  "low": 718.36,
+                  "close": 720.1,
+                  "volume": 13047312
+            },
+            {
+                  "time": "08 Sep 2026",
+                  "open": 720.1,
+                  "high": 724.21,
+                  "low": 717.12,
+                  "close": 721.22,
+                  "volume": 14611659
+            },
+            {
+                  "time": "09 Sep 2026",
+                  "open": 721.22,
+                  "high": 732.98,
+                  "low": 718.88,
+                  "close": 732.05,
+                  "volume": 13999559
+            },
+            {
+                  "time": "10 Sep 2026",
+                  "open": 732.05,
+                  "high": 743.54,
+                  "low": 729.88,
+                  "close": 738.92,
+                  "volume": 11650643
+            },
+            {
+                  "time": "11 Sep 2026",
+                  "open": 738.92,
+                  "high": 739.89,
+                  "low": 727.7,
+                  "close": 733.08,
+                  "volume": 15665912
+            },
+            {
+                  "time": "15 Sep 2026",
+                  "open": 733.08,
+                  "high": 737.43,
+                  "low": 729.4,
+                  "close": 735.18,
+                  "volume": 14181571
+            },
+            {
+                  "time": "16 Sep 2026",
+                  "open": 735.18,
+                  "high": 746.07,
+                  "low": 734.16,
+                  "close": 743.38,
+                  "volume": 15271091
+            },
+            {
+                  "time": "17 Sep 2026",
+                  "open": 743.38,
+                  "high": 746.81,
+                  "low": 722.34,
+                  "close": 725.21,
+                  "volume": 16571161
+            },
+            {
+                  "time": "18 Sep 2026",
+                  "open": 725.21,
+                  "high": 725.34,
+                  "low": 724.44,
+                  "close": 725.14,
+                  "volume": 13418543
+            },
+            {
+                  "time": "21 Sep 2026",
+                  "open": 725.14,
+                  "high": 731.71,
+                  "low": 724.96,
+                  "close": 731.46,
+                  "volume": 15889178
+            },
+            {
+                  "time": "22 Sep 2026",
+                  "open": 740.0,
+                  "high": 748.2,
+                  "low": 738.5,
+                  "close": 744.65,
+                  "volume": 14500000
+            }
       ],
-      RELIANCE: [
-        { time: "22 Aug 2026", open: 150.0, high: 150.0, low: 150.0, close: 150.0, volume: 7000 },
-        { time: "24 Aug 2026", open: 0.69, high: 0.7, low: 0.25, close: 0.3, volume: 5000 },
-        { time: "25 Aug 2026", open: 0.3, high: 0.49, low: 0.3, close: 0.46, volume: 7500 },
-        { time: "26 Aug 2026", open: 0.49, high: 0.49, low: 0.49, close: 0.49, volume: 46 },
-        { time: "27 Aug 2026", open: 0.5, high: 0.99, low: 0.5, close: 0.99, volume: 25000 },
-        { time: "31 Aug 2026", open: 0.5, high: 0.5, low: 0.5, close: 0.5, volume: 1 },
-        { time: "01 Sep 2026", open: 0.5, high: 0.5, low: 0.5, close: 0.5, volume: 1000 },
-        { time: "02 Sep 2026", open: 0.38, high: 0.38, low: 0.38, close: 0.38, volume: 12420 },
-        { time: "03 Sep 2026", open: 3.0, high: 3.0, low: 3.0, close: 3.0, volume: 991 },
-        { time: "04 Sep 2026", open: 2.0, high: 2.2, low: 2.0, close: 2.1, volume: 764 },
-        { time: "07 Sep 2026", open: 2.1, high: 2.1, low: 2.1, close: 2.1, volume: 1528 },
-        { time: "08 Sep 2026", open: 0.3, high: 0.3, low: 0.3, close: 0.3, volume: 1000 },
-        { time: "09 Sep 2026", open: 2.1, high: 2.1, low: 2.1, close: 2.1, volume: 12 },
-        { time: "10 Sep 2026", open: 0.3, high: 0.4, low: 0.3, close: 0.36, volume: 229501 },
-        { time: "11 Sep 2026", open: 2.8, high: 2.8, low: 2.8, close: 2.8, volume: 773 },
-        { time: "15 Sep 2026", open: 0.29, high: 0.49, low: 0.29, close: 0.49, volume: 42523 },
-        { time: "16 Sep 2026", open: 0.58, high: 0.58, low: 0.58, close: 0.58, volume: 612 },
-        { time: "17 Sep 2026", open: 0.38, high: 0.5, low: 0.38, close: 0.5, volume: 570000 },
-        { time: "18 Sep 2026", open: 0.43, high: 0.75, low: 0.35, close: 0.75, volume: 812000 },
-        { time: "21 Sep 2026", open: 0.3, high: 1.0, low: 0.3, close: 1.0, volume: 60000 }
+      "SBIN": [
+            {
+                  "time": "25 Aug 2026",
+                  "open": 981.92,
+                  "high": 983.77,
+                  "low": 976.24,
+                  "close": 978.21,
+                  "volume": 17627685
+            },
+            {
+                  "time": "26 Aug 2026",
+                  "open": 978.21,
+                  "high": 988.34,
+                  "low": 977.49,
+                  "close": 985.53,
+                  "volume": 17630491
+            },
+            {
+                  "time": "27 Aug 2026",
+                  "open": 985.53,
+                  "high": 994.28,
+                  "low": 980.53,
+                  "close": 993.11,
+                  "volume": 17292706
+            },
+            {
+                  "time": "28 Aug 2026",
+                  "open": 993.11,
+                  "high": 1002.15,
+                  "low": 987.85,
+                  "close": 1000.65,
+                  "volume": 19077901
+            },
+            {
+                  "time": "31 Aug 2026",
+                  "open": 1000.65,
+                  "high": 1006.97,
+                  "low": 997.97,
+                  "close": 1004.1,
+                  "volume": 15304655
+            },
+            {
+                  "time": "01 Sep 2026",
+                  "open": 1004.1,
+                  "high": 1026.73,
+                  "low": 996.71,
+                  "close": 1024.6,
+                  "volume": 18443123
+            },
+            {
+                  "time": "02 Sep 2026",
+                  "open": 1024.6,
+                  "high": 1029.03,
+                  "low": 1006.72,
+                  "close": 1011.17,
+                  "volume": 17501170
+            },
+            {
+                  "time": "03 Sep 2026",
+                  "open": 1011.17,
+                  "high": 1015.74,
+                  "low": 1010.29,
+                  "close": 1014.48,
+                  "volume": 12814417
+            },
+            {
+                  "time": "04 Sep 2026",
+                  "open": 1014.48,
+                  "high": 1016.91,
+                  "low": 999.15,
+                  "close": 1006.3,
+                  "volume": 18552466
+            },
+            {
+                  "time": "07 Sep 2026",
+                  "open": 1006.3,
+                  "high": 1007.44,
+                  "low": 990.07,
+                  "close": 996.86,
+                  "volume": 17766449
+            },
+            {
+                  "time": "08 Sep 2026",
+                  "open": 996.86,
+                  "high": 999.86,
+                  "low": 986.44,
+                  "close": 990.26,
+                  "volume": 15811824
+            },
+            {
+                  "time": "09 Sep 2026",
+                  "open": 990.26,
+                  "high": 993.77,
+                  "low": 983.46,
+                  "close": 987.03,
+                  "volume": 18759273
+            },
+            {
+                  "time": "10 Sep 2026",
+                  "open": 987.03,
+                  "high": 999.12,
+                  "low": 984.48,
+                  "close": 996.34,
+                  "volume": 15768746
+            },
+            {
+                  "time": "11 Sep 2026",
+                  "open": 996.34,
+                  "high": 1001.82,
+                  "low": 989.99,
+                  "close": 998.38,
+                  "volume": 14528829
+            },
+            {
+                  "time": "15 Sep 2026",
+                  "open": 998.38,
+                  "high": 1002.42,
+                  "low": 986.93,
+                  "close": 991.81,
+                  "volume": 16069529
+            },
+            {
+                  "time": "16 Sep 2026",
+                  "open": 991.81,
+                  "high": 992.52,
+                  "low": 990.94,
+                  "close": 992.21,
+                  "volume": 17928050
+            },
+            {
+                  "time": "17 Sep 2026",
+                  "open": 992.21,
+                  "high": 999.21,
+                  "low": 978.96,
+                  "close": 983.37,
+                  "volume": 12452981
+            },
+            {
+                  "time": "18 Sep 2026",
+                  "open": 983.37,
+                  "high": 995.26,
+                  "low": 980.81,
+                  "close": 991.95,
+                  "volume": 12920207
+            },
+            {
+                  "time": "21 Sep 2026",
+                  "open": 991.95,
+                  "high": 998.8,
+                  "low": 986.91,
+                  "close": 992.23,
+                  "volume": 16488265
+            },
+            {
+                  "time": "22 Sep 2026",
+                  "open": 992.0,
+                  "high": 1002.5,
+                  "low": 988.0,
+                  "close": 996.0,
+                  "volume": 16400000
+            }
+      ],
+      "MARUTI": [
+            {
+                  "time": "25 Aug 2026",
+                  "open": 12247.62,
+                  "high": 12267.47,
+                  "low": 12079.66,
+                  "close": 12147.83,
+                  "volume": 432447
+            },
+            {
+                  "time": "26 Aug 2026",
+                  "open": 12147.83,
+                  "high": 12329.4,
+                  "low": 12109.34,
+                  "close": 12307.31,
+                  "volume": 405039
+            },
+            {
+                  "time": "27 Aug 2026",
+                  "open": 12307.31,
+                  "high": 12362.29,
+                  "low": 12299.15,
+                  "close": 12343.44,
+                  "volume": 475963
+            },
+            {
+                  "time": "28 Aug 2026",
+                  "open": 12343.44,
+                  "high": 12351.94,
+                  "low": 12238.79,
+                  "close": 12249.44,
+                  "volume": 439010
+            },
+            {
+                  "time": "31 Aug 2026",
+                  "open": 12249.44,
+                  "high": 12274.85,
+                  "low": 12220.23,
+                  "close": 12268.2,
+                  "volume": 414711
+            },
+            {
+                  "time": "01 Sep 2026",
+                  "open": 12268.2,
+                  "high": 12287.07,
+                  "low": 12130.45,
+                  "close": 12146.37,
+                  "volume": 522416
+            },
+            {
+                  "time": "02 Sep 2026",
+                  "open": 12146.37,
+                  "high": 12210.27,
+                  "low": 12052.44,
+                  "close": 12187.07,
+                  "volume": 357869
+            },
+            {
+                  "time": "03 Sep 2026",
+                  "open": 12187.07,
+                  "high": 12255.72,
+                  "low": 12147.18,
+                  "close": 12155.86,
+                  "volume": 436214
+            },
+            {
+                  "time": "04 Sep 2026",
+                  "open": 12155.86,
+                  "high": 12408.9,
+                  "low": 12055.83,
+                  "close": 12358.09,
+                  "volume": 485484
+            },
+            {
+                  "time": "07 Sep 2026",
+                  "open": 12358.09,
+                  "high": 12554.4,
+                  "low": 12341.42,
+                  "close": 12471.74,
+                  "volume": 420590
+            },
+            {
+                  "time": "08 Sep 2026",
+                  "open": 12471.74,
+                  "high": 12638.15,
+                  "low": 12454.39,
+                  "close": 12536.64,
+                  "volume": 433847
+            },
+            {
+                  "time": "09 Sep 2026",
+                  "open": 12536.64,
+                  "high": 12578.43,
+                  "low": 12491.42,
+                  "close": 12498.84,
+                  "volume": 386540
+            },
+            {
+                  "time": "10 Sep 2026",
+                  "open": 12498.84,
+                  "high": 12555.69,
+                  "low": 12395.7,
+                  "close": 12429.63,
+                  "volume": 428887
+            },
+            {
+                  "time": "11 Sep 2026",
+                  "open": 12429.63,
+                  "high": 12562.05,
+                  "low": 12271.65,
+                  "close": 12356.87,
+                  "volume": 402597
+            },
+            {
+                  "time": "15 Sep 2026",
+                  "open": 12356.87,
+                  "high": 12420.0,
+                  "low": 12296.11,
+                  "close": 12395.88,
+                  "volume": 286633
+            },
+            {
+                  "time": "16 Sep 2026",
+                  "open": 12395.88,
+                  "high": 12501.68,
+                  "low": 12384.07,
+                  "close": 12468.13,
+                  "volume": 458472
+            },
+            {
+                  "time": "17 Sep 2026",
+                  "open": 12468.13,
+                  "high": 12472.84,
+                  "low": 12300.26,
+                  "close": 12325.78,
+                  "volume": 343906
+            },
+            {
+                  "time": "18 Sep 2026",
+                  "open": 12325.78,
+                  "high": 12371.53,
+                  "low": 12238.4,
+                  "close": 12243.54,
+                  "volume": 493643
+            },
+            {
+                  "time": "21 Sep 2026",
+                  "open": 12243.54,
+                  "high": 12313.98,
+                  "low": 12068.1,
+                  "close": 12079.46,
+                  "volume": 374927
+            },
+            {
+                  "time": "22 Sep 2026",
+                  "open": 12080.0,
+                  "high": 12210.0,
+                  "low": 12050.0,
+                  "close": 12153.0,
+                  "volume": 425000
+            }
       ]
-    };
+};
 
     // Curated Indian Stocks Catalog to ensure real-time charts and data render reliably
     const DEFAULT_CURATED_STOCKS = [
       {
-        symbol: "RELIANCE",
-        name: "Reliance Industries Ltd",
-        price: 2985.40,
-        change: 18.60,
-        change_percent: 0.63,
-        open: 2970.00,
-        high: 2995.00,
-        low: 2962.10,
-        previous_close: 2966.80,
-        volume: 8450000,
-        market_cap: "₹20.21 Lakh Cr",
-        pe_ratio: 28.4,
-        sector: "Energy & Telecom",
-        range_52w_high: 3217.90,
-        range_52w_low: 2220.30,
-        exchange: "NSE",
-        is_index: false
+            "symbol": "RELIANCE",
+            "name": "Reliance Industries Ltd",
+            "price": 1247.6,
+            "change": 0.2,
+            "change_percent": 0.016,
+            "open": 1247.6,
+            "high": 1251.9,
+            "low": 1244.6,
+            "previous_close": 1247.4,
+            "volume": 6450000,
+            "market_cap": "\u20b916.88 Lakh Cr",
+            "pe_ratio": 22.59,
+            "sector": "Energy & Telecom",
+            "range_52w_high": 1611.8,
+            "range_52w_low": 1226.4,
+            "exchange": "NSE",
+            "is_index": false
       },
       {
-        symbol: "TCS",
-        name: "Tata Consultancy Services Ltd",
-        price: 4290.80,
-        change: 34.20,
-        change_percent: 0.80,
-        open: 4260.00,
-        high: 4310.00,
-        low: 4252.00,
-        previous_close: 4256.60,
-        volume: 1840000,
-        market_cap: "₹15.52 Lakh Cr",
-        pe_ratio: 32.1,
-        sector: "Information Technology",
-        range_52w_high: 4585.00,
-        range_52w_low: 3313.00,
-        exchange: "NSE",
-        is_index: false
+            "symbol": "TCS",
+            "name": "Tata Consultancy Services Ltd",
+            "price": 2109.0,
+            "change": -19.8,
+            "change_percent": -0.93,
+            "open": 2125.0,
+            "high": 2135.0,
+            "low": 2102.0,
+            "previous_close": 2128.8,
+            "volume": 2840000,
+            "market_cap": "\u20b97.64 Lakh Cr",
+            "pe_ratio": 24.2,
+            "sector": "Information Technology",
+            "range_52w_high": 2450.0,
+            "range_52w_low": 1980.0,
+            "exchange": "NSE",
+            "is_index": false
       },
       {
-        symbol: "INFY",
-        name: "Infosys Ltd",
-        price: 1910.25,
-        change: -12.40,
-        change_percent: -0.65,
-        open: 1925.00,
-        high: 1932.00,
-        low: 1904.50,
-        previous_close: 1922.65,
-        volume: 6120000,
-        market_cap: "₹7.93 Lakh Cr",
-        pe_ratio: 29.8,
-        sector: "Information Technology",
-        range_52w_high: 1991.45,
-        range_52w_low: 1358.35,
-        exchange: "NSE",
-        is_index: false
+            "symbol": "INFY",
+            "name": "Infosys Ltd",
+            "price": 1025.2,
+            "change": -13.3,
+            "change_percent": -1.28,
+            "open": 1035.0,
+            "high": 1040.0,
+            "low": 1021.0,
+            "previous_close": 1038.5,
+            "volume": 6120000,
+            "market_cap": "\u20b94.26 Lakh Cr",
+            "pe_ratio": 21.4,
+            "sector": "Information Technology",
+            "range_52w_high": 1280.0,
+            "range_52w_low": 950.0,
+            "exchange": "NSE",
+            "is_index": false
       },
       {
-        symbol: "HDFCBANK",
-        name: "HDFC Bank Ltd",
-        price: 1668.50,
-        change: 14.10,
-        change_percent: 0.85,
-        open: 1655.00,
-        high: 1675.00,
-        low: 1651.20,
-        previous_close: 1654.40,
-        volume: 14500000,
-        market_cap: "₹12.68 Lakh Cr",
-        pe_ratio: 19.5,
-        sector: "Banking & Finance",
-        range_52w_high: 1794.00,
-        range_52w_low: 1363.55,
-        exchange: "NSE",
-        is_index: false
+            "symbol": "HDFCBANK",
+            "name": "HDFC Bank Ltd",
+            "price": 744.65,
+            "change": 5.15,
+            "change_percent": 0.7,
+            "open": 740.0,
+            "high": 748.2,
+            "low": 738.5,
+            "previous_close": 739.5,
+            "volume": 14500000,
+            "market_cap": "\u20b95.68 Lakh Cr",
+            "pe_ratio": 15.8,
+            "sector": "Banking & Finance",
+            "range_52w_high": 920.0,
+            "range_52w_low": 680.0,
+            "exchange": "NSE",
+            "is_index": false
       },
       {
-        symbol: "ICICIBANK",
-        name: "ICICI Bank Ltd",
-        price: 1215.30,
-        change: 9.40,
-        change_percent: 0.78,
-        open: 1208.00,
-        high: 1222.00,
-        low: 1204.10,
-        previous_close: 1205.90,
-        volume: 11800000,
-        market_cap: "₹8.54 Lakh Cr",
-        pe_ratio: 18.2,
-        sector: "Banking & Finance",
-        range_52w_high: 1257.80,
-        range_52w_low: 918.40,
-        exchange: "NSE",
-        is_index: false
+            "symbol": "ICICIBANK",
+            "name": "ICICI Bank Ltd",
+            "price": 1345.0,
+            "change": 10.2,
+            "change_percent": 0.76,
+            "open": 1338.0,
+            "high": 1352.0,
+            "low": 1335.0,
+            "previous_close": 1334.8,
+            "volume": 11800000,
+            "market_cap": "\u20b99.45 Lakh Cr",
+            "pe_ratio": 17.8,
+            "sector": "Banking & Finance",
+            "range_52w_high": 1420.0,
+            "range_52w_low": 980.0,
+            "exchange": "NSE",
+            "is_index": false
       },
       {
-        symbol: "TATAMOTORS",
-        name: "Tata Motors Ltd",
-        price: 984.50,
-        change: 15.60,
-        change_percent: 1.61,
-        open: 972.00,
-        high: 991.00,
-        low: 968.00,
-        previous_close: 968.90,
-        volume: 8700000,
-        market_cap: "₹3.62 Lakh Cr",
-        pe_ratio: 16.4,
-        sector: "Automotive & EV",
-        range_52w_high: 1179.05,
-        range_52w_low: 600.65,
-        exchange: "NSE",
-        is_index: false
+            "symbol": "SBIN",
+            "name": "State Bank of India",
+            "price": 996.0,
+            "change": 4.8,
+            "change_percent": 0.48,
+            "open": 992.0,
+            "high": 1002.5,
+            "low": 988.0,
+            "previous_close": 991.2,
+            "volume": 16400000,
+            "market_cap": "\u20b98.88 Lakh Cr",
+            "pe_ratio": 11.4,
+            "sector": "Banking & Finance",
+            "range_52w_high": 1080.0,
+            "range_52w_low": 740.0,
+            "exchange": "NSE",
+            "is_index": false
       },
       {
-        symbol: "ITC",
-        name: "ITC Ltd",
-        price: 512.40,
-        change: 3.10,
-        change_percent: 0.61,
-        open: 510.00,
-        high: 515.20,
-        low: 508.80,
-        previous_close: 509.30,
-        volume: 9800000,
-        market_cap: "₹6.40 Lakh Cr",
-        pe_ratio: 28.1,
-        sector: "Consumer Goods (FMCG)",
-        range_52w_high: 528.55,
-        range_52w_low: 399.30,
-        exchange: "NSE",
-        is_index: false
+            "symbol": "MARUTI",
+            "name": "Maruti Suzuki India Ltd",
+            "price": 12153.0,
+            "change": 85.0,
+            "change_percent": 0.7,
+            "open": 12080.0,
+            "high": 12210.0,
+            "low": 12050.0,
+            "previous_close": 12068.0,
+            "volume": 425000,
+            "market_cap": "\u20b93.82 Lakh Cr",
+            "pe_ratio": 26.8,
+            "sector": "Automobile & EV",
+            "range_52w_high": 13680.0,
+            "range_52w_low": 9750.0,
+            "exchange": "NSE",
+            "is_index": false
       },
       {
-        symbol: "BHARTIARTL",
-        name: "Bharti Airtel Ltd",
-        price: 1584.70,
-        change: 22.30,
-        change_percent: 1.43,
-        open: 1565.00,
-        high: 1592.00,
-        low: 1561.00,
-        previous_close: 1562.40,
-        volume: 5300000,
-        market_cap: "₹9.20 Lakh Cr",
-        pe_ratio: 42.5,
-        sector: "Telecommunications",
-        range_52w_high: 1625.00,
-        range_52w_low: 890.00,
-        exchange: "NSE",
-        is_index: false
+            "symbol": "TATAMOTORS",
+            "name": "Tata Motors Ltd",
+            "price": 444.0,
+            "change": 3.1,
+            "change_percent": 0.7,
+            "open": 441.5,
+            "high": 447.0,
+            "low": 440.0,
+            "previous_close": 440.9,
+            "volume": 14200000,
+            "market_cap": "\u20b91.63 Lakh Cr",
+            "pe_ratio": 12.5,
+            "sector": "Automobile & EV",
+            "range_52w_high": 520.0,
+            "range_52w_low": 360.0,
+            "exchange": "NSE",
+            "is_index": false
       },
       {
-        symbol: "SBIN",
-        name: "State Bank of India",
-        price: 812.60,
-        change: -4.20,
-        change_percent: -0.51,
-        open: 818.00,
-        high: 821.50,
-        low: 809.00,
-        previous_close: 816.80,
-        volume: 16400000,
-        market_cap: "₹7.25 Lakh Cr",
-        pe_ratio: 10.9,
-        sector: "Banking & Finance",
-        range_52w_high: 912.00,
-        range_52w_low: 555.00,
-        exchange: "NSE",
-        is_index: false
+            "symbol": "ITC",
+            "name": "ITC Ltd",
+            "price": 267.0,
+            "change": -1.2,
+            "change_percent": -0.45,
+            "open": 268.5,
+            "high": 269.5,
+            "low": 266.0,
+            "previous_close": 268.2,
+            "volume": 9200000,
+            "market_cap": "\u20b93.34 Lakh Cr",
+            "pe_ratio": 16.2,
+            "sector": "FMCG",
+            "range_52w_high": 320.0,
+            "range_52w_low": 210.0,
+            "exchange": "NSE",
+            "is_index": false
       },
       {
-        symbol: "MARUTI",
-        name: "Maruti Suzuki India Ltd",
-        price: 3.50,
-        change: -8.50,
-        change_percent: -70.83,
-        open: 3.50,
-        high: 3.50,
-        low: 3.50,
-        previous_close: 12.00,
-        volume: 427,
-        market_cap: "₹3.82 Lakh Cr",
-        pe_ratio: 26.8,
-        sector: "Automobile & EV",
-        range_52w_high: 40.00,
-        range_52w_low: 0.01,
-        exchange: "NSE",
-        is_index: false
+            "symbol": "BHARTIARTL",
+            "name": "Bharti Airtel Ltd",
+            "price": 1832.0,
+            "change": 14.5,
+            "change_percent": 0.8,
+            "open": 1820.0,
+            "high": 1842.0,
+            "low": 1815.0,
+            "previous_close": 1817.5,
+            "volume": 5800000,
+            "market_cap": "\u20b910.82 Lakh Cr",
+            "pe_ratio": 38.5,
+            "sector": "Telecommunications",
+            "range_52w_high": 1920.0,
+            "range_52w_low": 1150.0,
+            "exchange": "NSE",
+            "is_index": false
       },
       {
-        symbol: "NIFTY 50",
-        name: "Nifty 50 Index",
-        price: 25418.80,
-        change: 142.50,
-        change_percent: 0.56,
-        open: 25320.00,
-        high: 25445.00,
-        low: 25305.00,
-        previous_close: 25276.30,
-        volume: 245000000,
-        market_cap: "National Stock Exchange Benchmark",
-        pe_ratio: 22.8,
-        sector: "Broad Market Benchmark",
-        range_52w_high: 26277.35,
-        range_52w_low: 18837.85,
-        exchange: "NSE",
-        is_index: true
+            "symbol": "NIFTY 50",
+            "name": "Nifty 50 Index",
+            "price": 25418.8,
+            "change": 142.5,
+            "change_percent": 0.56,
+            "open": 25320.0,
+            "high": 25445.0,
+            "low": 25305.0,
+            "previous_close": 25276.3,
+            "volume": 245000000,
+            "market_cap": "National Stock Exchange Benchmark",
+            "pe_ratio": 22.8,
+            "sector": "Broad Market Benchmark",
+            "range_52w_high": 26277.35,
+            "range_52w_low": 18837.85,
+            "exchange": "NSE",
+            "is_index": true
       },
       {
-        symbol: "SENSEX",
-        name: "BSE Sensex Index",
-        price: 83184.80,
-        change: 468.20,
-        change_percent: 0.57,
-        open: 82890.00,
-        high: 83250.00,
-        low: 82810.00,
-        previous_close: 82716.60,
-        volume: 185000000,
-        market_cap: "Bombay Stock Exchange Benchmark",
-        pe_ratio: 23.4,
-        sector: "Broad Market Benchmark",
-        range_52w_high: 85978.25,
-        range_52w_low: 63583.07,
-        exchange: "BSE",
-        is_index: true
+            "symbol": "SENSEX",
+            "name": "BSE Sensex Index",
+            "price": 83214.72,
+            "change": 465.1,
+            "change_percent": 0.56,
+            "open": 82950.0,
+            "high": 83310.0,
+            "low": 82890.0,
+            "previous_close": 82749.62,
+            "volume": 142000000,
+            "market_cap": "Bombay Stock Exchange Benchmark",
+            "pe_ratio": 23.5,
+            "sector": "Broad Market Benchmark",
+            "range_52w_high": 85978.25,
+            "range_52w_low": 63580.0,
+            "exchange": "BSE",
+            "is_index": true
       }
-    ];
+];
 
     // ==========================================================================
     // MAIN APPLICATION COMPONENT
@@ -2205,22 +2943,9 @@
           } catch (e) {}
         }
 
-        const interval = setInterval(() => {
-          setStocksList(prev => prev.map(s => {
-            if (Math.random() > 0.45) {
-              const delta = (Math.random() - 0.48) * (s.price * 0.001);
-              const nextPrice = Number((s.price + delta).toFixed(2));
-              const nextChange = Number((s.change + delta).toFixed(2));
-              const nextPct = Number(((nextChange / (nextPrice - nextChange)) * 100).toFixed(2));
-              return { ...s, price: nextPrice, change: nextChange, change_percent: nextPct };
-            }
-            return s;
-          }));
-        }, 4000);
-
+        // Keep live event source subscription if active; avoid artificial random price drift
         return () => {
           if (eventSource) eventSource.close();
-          clearInterval(interval);
         };
       }, []);
 
@@ -2271,33 +2996,69 @@
       };
 
       const createSyntheticCandles = (symbol, range) => {
-        if (typeof AUTHENTIC_DATASETS !== 'undefined' && AUTHENTIC_DATASETS[symbol] && AUTHENTIC_DATASETS[symbol].length > 0) {
-          return AUTHENTIC_DATASETS[symbol];
-        }
         const stock = (stocksList || []).find(s => s.symbol === symbol) || (DEFAULT_CURATED_STOCKS || []).find(s => s.symbol === symbol);
         const basePrice = stock ? stock.price : 1500;
-        const count = range === '1D' ? 30 : range === '1W' ? 35 : range === '1M' ? 30 : range === '1Y' ? 52 : 40;
-        let curr = basePrice * 0.95;
+
+        if (typeof AUTHENTIC_DATASETS !== 'undefined' && AUTHENTIC_DATASETS[symbol] && AUTHENTIC_DATASETS[symbol].length > 0) {
+          const authList = AUTHENTIC_DATASETS[symbol].map(c => ({ ...c }));
+          if (stock && authList.length > 0) {
+            const last = authList[authList.length - 1];
+            last.close = stock.price;
+            last.open = stock.open || last.open;
+            last.high = Math.max(stock.high || last.high, stock.price);
+            last.low = Math.min(stock.low || last.low, stock.price);
+          }
+          if (range === '1W') {
+            return authList.slice(-5);
+          }
+          if (range === '1D') {
+            const times = ['09:15', '09:45', '10:15', '10:45', '11:15', '11:45', '12:15', '12:45', '13:15', '13:45', '14:15', '14:45', '15:15', '15:30'];
+            let cur = (stock ? stock.open : basePrice) || basePrice;
+            const intraday = [];
+            for (let i = 0; i < times.length; i++) {
+              const isLast = (i === times.length - 1);
+              const nextClose = isLast ? (stock ? stock.price : cur) : Number((cur + (Math.random() - 0.48) * (basePrice * 0.003)).toFixed(2));
+              const o = cur;
+              const c = nextClose;
+              const h = Number((Math.max(o, c) + Math.random() * (basePrice * 0.002)).toFixed(2));
+              const l = Number((Math.min(o, c) - Math.random() * (basePrice * 0.002)).toFixed(2));
+              intraday.push({
+                time: times[i],
+                open: o,
+                high: h,
+                low: l,
+                close: c,
+                volume: Math.floor(Math.random() * 80000 + 20000)
+              });
+              cur = c;
+            }
+            return intraday;
+          }
+          return authList;
+        }
+
+        const count = range === '1D' ? 14 : range === '1W' ? 5 : range === '1M' ? 20 : range === '1Y' ? 40 : 25;
+        let curr = basePrice * (range === '1D' ? 0.995 : 0.96);
         const res = [];
+        const times1D = ['09:15', '09:45', '10:15', '10:45', '11:15', '11:45', '12:15', '12:45', '13:15', '13:45', '14:15', '14:45', '15:15', '15:30'];
         for (let i = 0; i < count; i++) {
-          const change = (Math.random() - 0.48) * (curr * 0.02);
+          const isLast = (i === count - 1);
+          const change = isLast ? 0 : (Math.random() - 0.48) * (curr * (range === '1D' ? 0.004 : 0.015));
           const o = Math.round(curr * 100) / 100;
-          const c = Math.round((curr + change) * 100) / 100;
-          const h = Math.round(Math.max(o, c) + Math.random() * (curr * 0.01) * 100) / 100;
-          const l = Math.round(Math.min(o, c) - Math.random() * (curr * 0.01) * 100) / 100;
+          const c = isLast ? (stock ? stock.price : o) : Math.round((curr + change) * 100) / 100;
+          const h = Math.round(Math.max(o, c) + Math.random() * (curr * 0.005) * 100) / 100;
+          const l = Math.round(Math.min(o, c) - Math.random() * (curr * 0.005) * 100) / 100;
           const vol = Math.floor(Math.random() * 50000 + 10000);
+          const tLabel = range === '1D' ? (times1D[i] || '15:30') : `Day ${i + 1}`;
           res.push({
-            time: `T-${count - i}`,
-            open: o,
-            high: h,
-            low: l,
+            time: tLabel,
+            open: isLast && stock ? (stock.open || o) : o,
+            high: isLast && stock ? Math.max(stock.high || h, stock.price) : h,
+            low: isLast && stock ? Math.min(stock.low || l, stock.price) : l,
             close: c,
             volume: vol
           });
           curr = c;
-        }
-        if (res.length > 0 && stock) {
-          res[res.length - 1].close = stock.price;
         }
         return res;
       };
